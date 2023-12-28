@@ -1,0 +1,7 @@
+{
+  "properties": [{
+    "name": "jasne.global.elements-size",
+    "type": "java.lang.String",
+    "description": "Set the maximum number of elements to display in a list."
+  }]
+}

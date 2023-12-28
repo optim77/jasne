@@ -2,12 +2,16 @@ package com.example.dstay.Controller;
 
 import com.example.dstay.Entity.Category;
 import com.example.dstay.Repository.CategoryRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController
+@Slf4j
+@RequestMapping(produces = "application/json")
 public class CategoryController {
 
     private final CategoryRepository categoryRepository;

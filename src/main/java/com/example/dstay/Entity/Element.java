@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 @Entity
 @Table(name = "record")
 @Data
+@RestResource(rel = "element", path = "element")
 public class Element {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

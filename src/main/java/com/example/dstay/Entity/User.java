@@ -2,6 +2,7 @@ package com.example.dstay.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -10,6 +11,7 @@ import java.util.*;
 @Entity
 @Table(name = "user")
 @Data
+@RestResource(rel = "user", path = "user")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
