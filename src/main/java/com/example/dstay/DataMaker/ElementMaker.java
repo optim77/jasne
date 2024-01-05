@@ -28,7 +28,7 @@ public class ElementMaker {
         element.setDescription("lorem");
         element.setSource("Source");
         element.setImage("Image");
-        element.setCategory(categoryRepository.findById(1L).orElseThrow(NoSuchElementException::new));
+        //element.setCategory(categoryRepository.findById(1L));
         //element.setAuthor();
         //elementRepository.save(element);
     }
