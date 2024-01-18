@@ -4,18 +4,14 @@ import com.example.dstay.Entity.Element;
 import com.example.dstay.Props.GlobalProps;
 import com.example.dstay.Repository.ElementRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.core.io.Resource;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.rest.core.annotation.RestResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,10 +31,13 @@ public class ElementController {
     }
 
     @GetMapping(value = "/element/{category_id}/all")
-    public List<Element> getAllByCategory(@PathVariable Long category_id){
-        Pageable pageable = (Pageable) PageRequest.of(0, globalProps.getElementsSize());
-        PageRequest page = PageRequest.of(0,12, Sort.by("createdAt").descending());
-        return elementRepository.findByCategoryId(category_id);
+    public Page<Element> getAllByCategory(@PathVariable Long category_id, Pageable pageable){
+        return elementRepository.findByCategoryId(category_id, pageable);
+    }
+
+    @PostMapping(value = "/element/search")
+    public Page<Element> searchElement(@RequestBody String search, Pageable pageable){
+        return elementRepository.findByNameContains(search, pageable);
     }
 
     @PostMapping(value = "/element", consumes = "application/json")

@@ -8,10 +8,8 @@ import org.springframework.data.rest.core.annotation.RestResource;
 @Table(name = "roles")
 @Data
 @RestResource(rel = "role", path = "role")
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Role extends BaseEntity{
+
     @Column(name = "role", unique = true, nullable = false, length = 50)
     private String name;
 

@@ -23,6 +23,7 @@ import java.util.List;
 @Slf4j
 @BasePathAwareController
 @RepositoryRestController
+@CrossOrigin(origins = "*")
 public class RegistrationController {
 
     private final UserRepository userRepository;
@@ -36,27 +37,37 @@ public class RegistrationController {
     }
 
 
-    @PostMapping(value = "/register", path = "/register", consumes = "application/hal+json")
+    @PostMapping(value = "/register", path = "/register", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<User> processRegistration(@RequestBody RegisterDTO registerDTO){
         if(userRepository.existsByEmail(registerDTO.getEmail())){
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>(HttpStatus.FOUND);
         }
-        User user = new User();
-        user.setEmail(registerDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        String username = registerDTO.getEmail().split("@")[0];
-        user.setUsername(username);
-        user.setVerified(false);
-        User savedUser = userRepository.save(user);
-        return ResponseEntity.ok(savedUser);
+        try{
+            User user = new User();
+            user.setEmail(registerDTO.getEmail());
+            user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+            String username = registerDTO.getEmail().split("@")[0];
+            user.setUsername(username);
+            user.setVerified(false);
+            User savedUser = userRepository.save(user);
+            return ResponseEntity.ok(savedUser);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
-    @PostMapping(value = "/login", path = "/login")
+    @PostMapping(value = "/login", path = "/login", consumes = "application/json")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDto) {
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User login successfully!...", HttpStatus.OK);
+        try{
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return new ResponseEntity<>("", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity("400", HttpStatus.UNAUTHORIZED);
+        }
     }
 }

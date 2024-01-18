@@ -10,10 +10,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 @Table(name = "record")
 @Data
 @RestResource(rel = "element", path = "element")
-public class Element {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Element extends BaseEntity{
 
     @Column(name = "name", nullable = false, unique = false, length = 255)
     private String name;

@@ -53,9 +53,8 @@ public class User implements UserDetails {
     @Column(name = "longitude", unique = false, nullable = true)
     private Double longitude;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

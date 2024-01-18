@@ -10,10 +10,7 @@ import java.util.Set;
 @Table(name = "category")
 @Data
 @RestResource(rel = "category", path = "category")
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Category extends BaseEntity{
 
     @Column(name = "name", unique = true, length = 255)
     private String name;

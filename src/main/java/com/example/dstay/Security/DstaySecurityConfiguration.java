@@ -45,6 +45,7 @@ public class DstaySecurityConfiguration {
                 .permitAll();
 
         http.csrf().disable();
+        http.cors().disable();
         http.headers().frameOptions().disable();
         return http.build();
     }
