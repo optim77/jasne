@@ -1,19 +1,34 @@
+import React from "react";
+import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
+import Login from "./Login";
+import Register from "./Register";
+import Main from "./Main";
+
 function Header(){
     return(
-        <nav className="navbar navbar-expand-lg navbar-light bg-dark">
-            <a className="navbar-brand" href="#">Navbar</a>
-            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div className="navbar-nav ml-auto">
-                    <a className="nav-item nav-link active" href="#">Home <span className="sr-only">(current)</span></a>
-                    <a className="nav-item nav-link" href="#">Features</a>
-                    <a className="nav-item nav-link" href="#">Pricing</a>
-                    <a class="nav-item nav-link disabled" href="#">Disabled</a>
+        <BrowserRouter>
+            <nav className="navbar navbar-expand-lg navbar-light bg-dark">
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse p-2" id="navbarNavAltMarkup">
+                    <div className="navbar-nav">
+                        <Link to="/" className="nav-item nav-link active text-white m-2 "><h4>Jasne!</h4></Link>
+                    </div>
+                    <div className="navbar-nav ms-auto">
+                        <Link to="/sign-in" className="nav-item nav-link active text-white btn m-2">Sign in</Link>
+                        <Link to="/sign-up" className="nav-item nav-link active text-white btn m-2 border">Sign up</Link>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+            <Routes>
+                <Route path="/" element={<Main />} />
+                <Route path="/sign-in" element={<Login />} />
+                <Route path="/sign-up" element={<Register />} />
+            </Routes>
+        </BrowserRouter>
+
+
     )
 }
 export default Header;

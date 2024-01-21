@@ -1,16 +1,11 @@
-import {useState} from "react";
-import LoginForm from "./Elements/LoginForm";
-import RegisterForm from "./Elements/RegisterForm";
 
 function Main(){
 
     return(
-        <div>
-            <LoginForm />
-            <RegisterForm />
+        <div className="container">
+            <div className="row d-flex">
+            </div>
         </div>
-
-
 )
 
 }
