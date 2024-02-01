@@ -1,9 +1,11 @@
 package com.example.dstay.Entity;
 
+import com.example.dstay.Enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
@@ -53,31 +55,38 @@ public class User implements UserDetails {
     @Column(name = "longitude", unique = false, nullable = true)
     private Double longitude;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles;
-
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.singletonList(new SimpleGrantedAuthority(role.name()));
+    }
+    @Override
+    public String getUsername(){
+        return email;
+    }
+    @Override
+    public String getPassword(){
+        return password;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

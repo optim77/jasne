@@ -1,5 +1,6 @@
 package com.example.dstay.DataMaker;
 
+import com.example.dstay.Entity.Role;
 import com.example.dstay.Entity.User;
 
 import com.example.dstay.Repository.UserRepository;

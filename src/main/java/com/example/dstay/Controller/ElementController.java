@@ -9,6 +9,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ import java.util.Optional;
 @Slf4j
 @RequestMapping(produces = "application/json")
 @EnableConfigurationProperties(GlobalProps.class)
+@CrossOrigin(origins = "*")
 public class ElementController {
 
     private final GlobalProps globalProps;
@@ -33,6 +35,12 @@ public class ElementController {
     @GetMapping(value = "/element/{category_id}/all")
     public Page<Element> getAllByCategory(@PathVariable Long category_id, Pageable pageable){
         return elementRepository.findByCategoryId(category_id, pageable);
+    }
+
+    //only for auth testing, change later
+    @GetMapping(value = "/element/random", consumes = "application/json")
+    public Page<Element> getRandomElements(Pageable pageable){
+        return elementRepository.findAll(pageable);
     }
 
     @PostMapping(value = "/element/search")

@@ -25,8 +25,8 @@ public class UserRepositoryUserDetailsService implements UserDetailsService{
         if (user == null){
             throw new UsernameNotFoundException("User " + usernameOrEmail + " not found");
         }
-        Set<GrantedAuthority> authorities = user.getRoles().stream()
-                .map((role) -> new SimpleGrantedAuthority(role.getName()))
+        Set<GrantedAuthority> authorities = user.getAuthorities().stream()
+                .map((role) -> new SimpleGrantedAuthority(role.getAuthority()))
                 .collect(Collectors.toSet());
         return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(), authorities);
 
