@@ -6,26 +6,37 @@ function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const [notification, setNotification] = useState('alert text-danger');
 
     let handleRegister = async (e) => {
         e.preventDefault();
         try {
-            let res = await fetch("http://localhost:8080/api/register", {
+            let res = await fetch("http://localhost:8080/register", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
                 },
                 body: JSON.stringify({
                     email: email,
                     password: password
                 }),
             });
-            let resJson = await res;
-            if (resJson.ok === false && resJson.status === 302) {
-                setMessage('Email is already exist');
+            if(res.status === 208) {
+                setMessage("Email is in use");
+                setNotification("alert text-danger");
+            }
+            else if(res.status === 200){
+                setMessage('Registered Successfully');
+                setNotification("alert text-success");
+            }
+            else{
+                setMessage("Something went wrong");
+                setNotification("alert text-danger");
             }
         } catch (err) {
-            setMessage(err);
+            setMessage("Something went wrong");
+            setNotification("alert text-danger");
         }
     }
 
@@ -36,7 +47,7 @@ function Register() {
                 <div className="bg-dark mt-5 p-5 rounded-3 shadow">
                     <form onSubmit={handleRegister} method="post">
                         <h2 className="text-white">Jasne!</h2>
-                        <p className="alert text-danger">{message}</p>
+                        <p className={notification}>{message}</p>
                         <div className="form-group">
                             <label className="text-white" htmlFor="emailRegister">Email</label>
                             <input className="form-control bg-dark text-white" id="emailRegister" name="emailRegister" type="email"

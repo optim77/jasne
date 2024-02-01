@@ -1,32 +1,29 @@
 import {useState} from "react";
 import {Link} from "react-router-dom";
+import {useAuth} from "./Services/AuthProvider";
 
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-    let handleLogin = async (e) => {
-        e.preventDefault()
-        try {
-            let res = await fetch("http://localhost:8080/api/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                }),
-            });
-            let resJson = await res;
-            if (resJson.status === 401) {
-                setMessage("Wrong Credentials");
 
-            }
-        } catch (err) {
-            setMessage("Something went wrong")
+    const auth = useAuth();
+    let handleLogin = async (e) => {
+        e.preventDefault();
+        try{
+            auth.processLogin(email, password).then((res) => {
+                if(res === 404){
+                    setMessage("Wrong Credentials");
+                }else if (res === 503){
+                    setMessage("Something went wrong");
+                }
+            })
+        }catch (err){
+            setMessage("Something went wrong");
         }
+
+        return;
     }
 
     return (
