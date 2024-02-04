@@ -46,7 +46,7 @@ function AuthProvider({children}){
     const logOut = () => {
         setUser(null);
         setToken("");
-        localStorage.removeItem("site");
+        localStorage.removeItem("jasne");
         // navigate("/login");
     };
 

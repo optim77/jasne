@@ -1,13 +1,24 @@
-import React, {useContext} from "react";
+import React from "react";
 import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
 import Login from "./Login";
 import Register from "./Register";
 import Main from "./Main";
-import AuthProvider, {useAuth} from "./Services/AuthProvider";
-import Elements from "./Elements";
+import {useAuth} from "./Services/AuthProvider";
 import Categories from "./Categories";
+import authChecker from "./Services/AuthChecker";
+import Profile from "./Profile";
+import PrivateRoute from "./Services/PrivateRoute";
+import {useTranslation} from "react-i18next";
+import Recovery from "./Recovery";
 
 function Header(){
+
+    const {logOut} = useAuth();
+    const handleLogout = () => {
+        logOut();
+    }
+    const {t} = useTranslation();
+
     return(
         <BrowserRouter>
             <nav className="navbar navbar-expand-lg navbar-light bg-dark">
@@ -21,9 +32,19 @@ function Header(){
 
                     <div className="navbar-nav ms-auto">
                         <Link to="/categories" className="nav-item nav-link active text-white btn m-2 border">Categories</Link>
-                        <Link to="/sign-in" className="nav-item nav-link active text-white btn m-2">Sign in</Link>
-                        <Link to="/sign-up" className="nav-item nav-link active text-white btn m-2 border">Sign up</Link>
+                        {authChecker() ? (
+                            <>
+                                <PrivateRoute path="/profile" component={Profile} />
+                                {/*<Link to="/profile" className="nav-item nav-link active text-white btn m-2 border" >Profile</Link>*/}
+                                <button to="/logout" onClick={handleLogout} className="nav-item nav-link active text-white btn m-2 border">Logout</button>
+                            </>
 
+                        ) : (
+                            <>
+                                <Link to="/sign-in" className="nav-item nav-link active text-white btn m-2">Sign in</Link>
+                                <Link to="/sign-up" className="nav-item nav-link active text-white btn m-2">Sign up</Link>
+                            </>
+                        )}
 
 
                     </div>
@@ -34,7 +55,8 @@ function Header(){
                 <Route path="/" element={<Main />} />
                 <Route path="/sign-in" element={<Login />} />
                 <Route path="/sign-up" element={<Register />} />
-
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/recover" element={<Recovery />} />
 
             </Routes>
         </BrowserRouter>

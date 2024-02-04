@@ -7,6 +7,7 @@ import AuthProvider from "./components/Services/AuthProvider";
 function App() {
   return (
     <div className="App">
+
         <AuthProvider>
             <Header />
         </AuthProvider>

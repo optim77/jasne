@@ -1,12 +1,21 @@
 import {useAuth} from "./AuthProvider";
-import {Navigate} from "react-router-dom";
-import Main from "../Main";
+import { Navigate, Route, Routes} from "react-router-dom";
 
-const PrivateRoute = () => {
-    const user = useAuth();
-    if(!user.token){
-        return <Navigate to="/sign-in" />
-    }
-    return <Main />
-}
-export default PrivateRoute;
+const PrivateRoute = ({ component: Component, ...rest }) => {
+    const { token } = useAuth();
+
+    return (
+        <Routes>
+            <Route
+                {...rest}
+                render={(props) => {
+                    return token ? (<Component {...props} />) : (<Navigate to="/sign-in" />)
+                }}
+            />
+        </Routes>
+
+
+
+    );
+};
+export default PrivateRoute
