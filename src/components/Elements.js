@@ -16,7 +16,6 @@ function Elements() {
                 }
             }).then((res) => {
                 res.json().then(data => {
-                    console.log(data)
                     setElements(data)
                 })
             })

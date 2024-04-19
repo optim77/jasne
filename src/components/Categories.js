@@ -1,13 +1,19 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useAuth} from "./Services/AuthProvider";
+import {render} from "react-dom";
 
-function Categories(){
+function Categories() {
 
     const [categories, setCategories] = useState([]);
+    const [message, setMessage] = useState('');
     const {token, logOut} = useAuth();
 
+    useEffect(() => {
+        getCategories();
+    }, []);
+
     const getCategories = async () => {
-        try{
+        try {
             let res = await fetch("http://localhost:8080/categories", {
                 method: "GET",
                 headers: {
@@ -17,16 +23,32 @@ function Categories(){
                 res.json().then(data => {
                     setCategories(data);
                 })
-                console.log(res);
+
             })
-        }catch (err){
-            console.log(err)
+            if (!res.ok) {
+                setMessage('Something get wrong')
+            }
+        } catch (err) {
+            return 503;
         }
     }
-    getCategories()
-    return(
-        <div>{categories}</div>
+
+    return (
+        <div className='container text-white'>
+            <div className='row'>
+                {categories.map(category => (
+                    <div className='col-4'>
+                        <button className='btn mt-5 btn-primary border'>
+                            {category.name}
+                        </button>
+                    </div>
+                ))}
+            </div>
+            <p>{message}</p>
+        </div>
+
     )
 
 }
+
 export default Categories;

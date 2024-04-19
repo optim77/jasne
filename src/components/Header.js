@@ -10,6 +10,8 @@ import Profile from "./Profile";
 import PrivateRoute from "./Services/PrivateRoute";
 import {useTranslation} from "react-i18next";
 import Recovery from "./Recovery";
+import Create from "./News/Create";
+import View from "./News/View";
 
 function Header(){
 
@@ -34,7 +36,9 @@ function Header(){
                         <Link to="/categories" className="nav-item nav-link active text-white btn m-2 border">Categories</Link>
                         {authChecker() ? (
                             <>
-                                <PrivateRoute path="/profile" component={Profile} />
+                                <Link to="profile"className="nav-item nav-link active text-white btn m-2 border">Profile</Link>
+                                <Link to="create" className="nav-item nav-link active text-white btn m-2 border">Create</Link>
+
                                 {/*<Link to="/profile" className="nav-item nav-link active text-white btn m-2 border" >Profile</Link>*/}
                                 <button to="/logout" onClick={handleLogout} className="nav-item nav-link active text-white btn m-2 border">Logout</button>
                             </>
@@ -57,7 +61,8 @@ function Header(){
                 <Route path="/sign-up" element={<Register />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/recover" element={<Recovery />} />
-
+                <Route path="/create" element={<Create />} />
+                <Route path="/news/:id" element={<View />} />
             </Routes>
         </BrowserRouter>
 

@@ -1,18 +1,29 @@
-import {useState} from "react";
-import {Link} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {Link, redirect, useNavigate} from "react-router-dom";
 import {useAuth} from "./Services/AuthProvider";
+import {useCookies} from "react-cookie";
+import CookieGetter from "./Services/CookieGetter";
+import RedirectIfNotLogged from "./Services/RedirectIfNotLogged";
 
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-
     const auth = useAuth();
+    const navigate = useNavigate();
+
+    RedirectIfNotLogged();
+
     let handleLogin = async (e) => {
         e.preventDefault();
         try {
             auth.processLogin(email, password).then((res) => {
+                if(res === 200){
+                    window.location.reload();
+                    navigate("/categories")
+                }
+                console.log(res);
                 if (res === 404) {
                     setMessage("Wrong Credentials");
                 } else if (res === 503) {

@@ -1,5 +1,7 @@
 import {useState} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import RedirectIfNotLogged from "./Services/RedirectIfNotLogged";
+import {wait} from "@testing-library/user-event/dist/utils";
 
 function Register() {
 
@@ -9,6 +11,9 @@ function Register() {
     const [notification, setNotification] = useState('alert text-danger');
     const [csrfToken, setToken] = useState(null);
     let t = null;
+    const navigate = useNavigate();
+
+    RedirectIfNotLogged();
     let handleRegister = async (e) => {
         e.preventDefault();
         if (t !== csrfToken) {
@@ -33,6 +38,7 @@ function Register() {
             } else if (res.status === 200) {
                 setMessage('Registered Successfully');
                 setNotification("alert text-success");
+                navigate("/sign-in");
             } else {
                 setMessage("Something went wrong");
                 setNotification("alert text-danger");

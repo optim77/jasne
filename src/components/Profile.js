@@ -1,6 +1,7 @@
 import {useAuth} from "./Services/AuthProvider";
 import {Navigate} from "react-router-dom";
 import {useEffect, useState} from "react";
+import CookieGetter from "./Services/CookieGetter";
 
 function Profile(){
     const {user} = useAuth()
@@ -36,7 +37,7 @@ function Profile(){
     }, [user]);
 
 
-    if(!user){
+    if(!CookieGetter()){
         return <Navigate to="/sign-up" />
     }else{
         return (

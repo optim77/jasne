@@ -1,5 +1,6 @@
 import {createContext, useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {useCookies} from "react-cookie";
 
 const AuthContext = createContext();
 
@@ -9,11 +10,11 @@ function AuthProvider({children}){
     const [message, setMessage] = useState("");
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem("jasne") || "");
-
+    const [userCookie, setUserCookie] = useCookies('access_token')
 
     const processLogin = async (email, password) => {
         try {
-            let res = await fetch("http://localhost:8080/authentication", {
+            let res = await fetch("http://localhost:8080/authenticate", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -26,17 +27,21 @@ function AuthProvider({children}){
             }).then((res) => {
                 try{
                     res.json().then(data => {
-                        if(data.length > 20){
+                        if(data){
                             setToken(data);
+                            setUser(data);
+                            let expires = new Date()
+                            expires.setTime(expires.getTime() + 9000000000)
+                            setUserCookie('access_token', data.token, { path: '/',  expires})
                         }else{
                             return 404;
                         }
                     });
-
                 }catch(err){
                     return 503;
                 }
             });
+            return 200;
         } catch (err) {
             return 503;
         }
@@ -46,8 +51,9 @@ function AuthProvider({children}){
     const logOut = () => {
         setUser(null);
         setToken("");
-        localStorage.removeItem("jasne");
-        // navigate("/login");
+        setUserCookie('access_token', null);
+
+        window.location.reload();
     };
 
     return <AuthContext.Provider value={{token, user, processLogin, logOut}}>{children}</AuthContext.Provider>
