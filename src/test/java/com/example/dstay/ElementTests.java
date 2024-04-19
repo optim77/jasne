@@ -1,9 +1,9 @@
 package com.example.dstay;
 
-import com.example.dstay.Entity.Category;
-import com.example.dstay.Entity.Element;
-import com.example.dstay.Entity.User;
-import com.example.dstay.Repository.ElementRepository;
+import com.example.dstay.main.Entity.Category;
+import com.example.dstay.main.Entity.Element;
+import com.example.dstay.main.Entity.User;
+import com.example.dstay.main.Repository.ElementRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Service;

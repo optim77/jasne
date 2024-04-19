@@ -1,0 +1,30 @@
+package com.example.dstay.main.Entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
+import org.springframework.data.rest.core.annotation.RestResource;
+
+import java.util.Set;
+
+@Entity
+@Table(name = "category")
+@Data
+@RestResource(rel = "category", path = "category")
+public class Category extends BaseEntity{
+
+    @Column(name = "name", unique = true, length = 255)
+    private String name;
+
+    @OneToMany(mappedBy = "id")
+    private Set<Element> records;
+
+    public Category() {
+
+    }
+
+    public Category(String name) {
+        this.name = name;
+    }
+
+
+}
