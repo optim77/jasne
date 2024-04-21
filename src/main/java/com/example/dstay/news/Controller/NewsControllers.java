@@ -1,6 +1,7 @@
 package com.example.dstay.news.Controller;
 
 import com.example.dstay.news.DTOs.NewsDTO;
+import com.example.dstay.news.DTOs.NewsWithAuthorDetails;
 import com.example.dstay.news.Entity.News;
 import com.example.dstay.news.Repository.NewsRepository;
 import com.example.dstay.news.Services.NewsService;
@@ -27,8 +28,8 @@ public class NewsControllers {
     }
 
     @GetMapping("/news/{newsId}")
-    public News getNewsById(@PathVariable Long newsId){
-        return newsRepository.findById(newsId).orElseThrow();
+    public NewsWithAuthorDetails getNewsById(@PathVariable Long newsId){
+        return newsService.execGetNewsById(newsId);
     }
 
     @GetMapping("/news")

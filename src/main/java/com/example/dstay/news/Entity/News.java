@@ -16,7 +16,7 @@ public class News {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "author", nullable = false)
     private User author;
 

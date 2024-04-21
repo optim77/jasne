@@ -4,6 +4,7 @@ import com.example.dstay.main.Entity.User;
 import com.example.dstay.main.Repository.UserRepository;
 import com.example.dstay.main.Security.JwtUtils;
 import com.example.dstay.news.DTOs.NewsDTO;
+import com.example.dstay.news.DTOs.NewsWithAuthorDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import com.example.dstay.news.Entity.News;
 import com.example.dstay.news.Repository.NewsRepository;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 
@@ -25,6 +27,27 @@ public class NewsService {
     public NewsService(NewsRepository newsRepository, UserRepository userRepository) {
         this.newsRepository = newsRepository;
         this.userRepository = userRepository;
+    }
+
+    public NewsWithAuthorDetails execGetNewsById(Long newsId){
+        Optional<News> news = newsRepository.findById(newsId);
+        NewsWithAuthorDetails newsWithAuthorDetails = new NewsWithAuthorDetails();
+        if(news.isPresent()){
+            newsWithAuthorDetails.setNewsId(news.get().getId());
+            newsWithAuthorDetails.setNewsTitle(news.get().getTitle());
+            newsWithAuthorDetails.setNewsDescription(news.get().getDescription());
+            newsWithAuthorDetails.setNewsCreatedAt(news.get().getCreated_at());
+            newsWithAuthorDetails.setNewsVotes(news.get().getVotes());
+            newsWithAuthorDetails.setCategories(news.get().getCategories());
+
+            newsWithAuthorDetails.setAuthorId(news.get().getAuthor().getId());
+            newsWithAuthorDetails.setAuthorName(news.get().getAuthor().getName());
+            newsWithAuthorDetails.setAuthorSurname(news.get().getAuthor().getSurname());
+            newsWithAuthorDetails.setAuthorSpecialization(news.get().getAuthor().getSpecialization());
+            newsWithAuthorDetails.setAuthorCreatedAt(news.get().getAuthor().getCreatedAt());
+            return newsWithAuthorDetails;
+        }
+        return null;
     }
 
     public Long execUploadNews(NewsDTO newsDTO) {
