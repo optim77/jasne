@@ -113,9 +113,10 @@ function Create_News(){
                             <input className="btn btn-success mt-4 w-100" type="submit" value="Send"/>
                         </form>
                     </div>
+
+
                 </div>
             </div>
-
         </>
     );
 }
