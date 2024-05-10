@@ -2,9 +2,8 @@ import {useAuth} from "./AuthProvider";
 import {useCookies} from "react-cookie";
 
 function AuthChecker(){
-    const {token} = useAuth();
-    const cookie = useCookies('access_token');
-    if(cookie[0].access_token && cookie[0].access_token != 'null'){
+    const jwtToken = localStorage.getItem('janse')
+    if(jwtToken && jwtToken != 'null'){
            return true;
     }
     return false;

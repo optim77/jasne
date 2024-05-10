@@ -2,6 +2,7 @@ import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import RedirectIfNotLogged from "./Services/RedirectIfNotLogged";
 import {wait} from "@testing-library/user-event/dist/utils";
+import RedirectIfLogged from "./Services/RedirectIfLogged";
 
 function Register() {
 
@@ -13,7 +14,7 @@ function Register() {
     let t = null;
     const navigate = useNavigate();
 
-    RedirectIfNotLogged();
+    RedirectIfLogged();
     let handleRegister = async (e) => {
         e.preventDefault();
         if (t !== csrfToken) {

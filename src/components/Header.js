@@ -12,6 +12,9 @@ import {useTranslation} from "react-i18next";
 import Recovery from "./Recovery";
 import Create from "./News/Create";
 import View from "./News/View";
+import CookieGetter from "./Services/CookieGetter";
+import {Dropdown} from "react-bootstrap";
+import Activity from "./Activity";
 
 function Header(){
 
@@ -34,13 +37,25 @@ function Header(){
 
                     <div className="navbar-nav ms-auto">
                         <Link to="/categories" className="nav-item nav-link active text-white btn m-2 border">Categories</Link>
-                        {authChecker() ? (
+                        {CookieGetter() ? (
                             <>
-                                <Link to="profile"className="nav-item nav-link active text-white btn m-2 border">Profile</Link>
-                                <Link to="create" className="nav-item nav-link active text-white btn m-2 border">Create</Link>
+                                <Link to="create" className="nav-item nav-link active text-white m-2 btn btn-primary">Ask question</Link>
+                                <Dropdown>
+                                    <Dropdown.Toggle className="nav-item nav-link active text-white btn m-2" variant="success" id="dropdown-basic">
+                                        Profile
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item href="/activity"><Link to="activity" className="text-decoration-none text-dark" >Activity</Link></Dropdown.Item>
+                                        <Dropdown.Item><Link to="profile" className="text-decoration-none text-dark" >Edit</Link></Dropdown.Item>
+                                        <Dropdown.Item onClick={handleLogout}>Sign out</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+
+                                {/*<Link to="profile" className="nav-item nav-link active text-white btn m-2 border">Profile</Link>*/}
+
 
                                 {/*<Link to="/profile" className="nav-item nav-link active text-white btn m-2 border" >Profile</Link>*/}
-                                <button to="/logout" onClick={handleLogout} className="nav-item nav-link active text-white btn m-2 border">Logout</button>
+                                {/*<button to="/logout" onClick={handleLogout} className="nav-item nav-link active text-white btn m-2">Sign out</button>*/}
                             </>
 
                         ) : (
@@ -59,10 +74,12 @@ function Header(){
                 <Route path="/" element={<Main />} />
                 <Route path="/sign-in" element={<Login />} />
                 <Route path="/sign-up" element={<Register />} />
+                <Route path="/activity" element={<Activity />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/recover" element={<Recovery />} />
                 <Route path="/create" element={<Create />} />
                 <Route path="/news/:id" element={<View />} />
+
             </Routes>
         </BrowserRouter>
 

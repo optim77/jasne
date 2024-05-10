@@ -28,7 +28,8 @@ function AuthProvider({children}){
                 try{
                     res.json().then(data => {
                         if(data){
-                            setToken(data);
+
+                            localStorage.setItem('jasne', data.token)
                             setUser(data);
                             let expires = new Date()
                             expires.setTime(expires.getTime() + 9000000000)
@@ -51,6 +52,7 @@ function AuthProvider({children}){
     const logOut = () => {
         setUser(null);
         setToken("");
+        localStorage.removeItem('jasne')
         setUserCookie('access_token', null);
 
         window.location.reload();

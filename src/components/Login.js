@@ -4,6 +4,7 @@ import {useAuth} from "./Services/AuthProvider";
 import {useCookies} from "react-cookie";
 import CookieGetter from "./Services/CookieGetter";
 import RedirectIfNotLogged from "./Services/RedirectIfNotLogged";
+import RedirectIfLogged from "./Services/RedirectIfLogged";
 
 
 function Login() {
@@ -13,7 +14,7 @@ function Login() {
     const auth = useAuth();
     const navigate = useNavigate();
 
-    RedirectIfNotLogged();
+    RedirectIfLogged();
 
     let handleLogin = async (e) => {
         e.preventDefault();

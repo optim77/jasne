@@ -7,7 +7,7 @@ function RedirectIfNotLogged(isLogged){
     const cookie = CookieGetter();
 
     useEffect(() => {
-        if (!cookie){
+        if (cookie){
             navigate("/");
         }
     }, [cookie]);
