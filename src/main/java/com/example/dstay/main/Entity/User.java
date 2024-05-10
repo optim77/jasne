@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.*;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Data
 @RestResource(rel = "user", path = "user")
 public class User implements UserDetails {

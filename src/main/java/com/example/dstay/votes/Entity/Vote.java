@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Entity
-@Table(name = "vote")
+@Table(name = "votes")
 @Data
 public class Vote {
     @Id
@@ -16,8 +16,8 @@ public class Vote {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user", nullable = false, referencedColumnName = "id")
-    private User user;
+    @JoinColumn(name = "users", nullable = false, referencedColumnName = "id")
+    private User users;
 
     @OneToOne
     @JoinColumn(name = "news", referencedColumnName = "id")

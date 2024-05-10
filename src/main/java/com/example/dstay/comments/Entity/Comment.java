@@ -4,6 +4,7 @@ import com.example.dstay.main.Entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import com.example.dstay.news.Entity.News;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.Date;
 import java.util.UUID;

@@ -1,19 +1,25 @@
 package com.example.dstay.comments.Controller;
 
+import com.example.dstay.comments.DTO.CommentDTO;
+import com.example.dstay.comments.DTO.CommentToNewsDTO;
 import com.example.dstay.comments.Entity.Comment;
 import com.example.dstay.comments.Repository.CommentRepository;
 import com.example.dstay.comments.Services.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping(produces = "application/json")
+@CrossOrigin(origins = "*")
 public class CommentsController {
 
     private final CommentRepository commentRepository;
@@ -25,16 +31,16 @@ public class CommentsController {
     }
 
     @PostMapping("/add_comment")
-    public Comment uploadComment(@RequestBody Comment comment){
+    public ResponseEntity<String> uploadComment(@RequestBody CommentDTO comment){
         return commentService.execUploadComment(comment);
     }
 
-
+    // TODO
     @GetMapping("/comment/{comment_id}")
-    public Comment getCommentById(@PathVariable Long comment_id){
-        return commentRepository.findById(comment_id).orElseThrow();
+    public Page<Comment> getCommentById(@PathVariable Long comment_id, Pageable pageable){
+        return commentRepository.findAllByNews(comment_id, pageable);
     }
-    //update
+
     @PatchMapping("/comment/{comment_id}")
     public Comment updateComment(@PathVariable Long comment_id, @RequestBody Comment comment){
         return commentService.execUpdateComment(comment_id, comment);
@@ -46,8 +52,10 @@ public class CommentsController {
     }
 
     @GetMapping("/news_comments/{news_id}")
-    public Page<Comment> getCommentsToNews(@PathVariable Long news_id, Pageable pageable){
-        return commentRepository.findAllByNews(news_id, pageable);
+    public Page<CommentToNewsDTO> getCommentsToNews(@PathVariable Long news_id, Pageable pageable){
+        List<CommentToNewsDTO> commentToNewsDTOS = commentService.execGetCommentsToNews(news_id, pageable);
+        long totalComments = commentRepository.countByNews_Id(news_id);
+        return new PageImpl<>(commentToNewsDTOS, pageable, totalComments);
     }
 
 }
