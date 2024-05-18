@@ -1,5 +1,6 @@
 package com.example.dstay.news.DTOs;
 
+import com.example.dstay.categories.Entity.Category;
 import com.example.dstay.news.Entity.Categories;
 import com.example.dstay.news.Entity.News;
 import lombok.Data;
@@ -17,7 +18,7 @@ public class NewsWithAuthorDetails {
     private String newsDescription = null;
     private Date newsCreatedAt = null;
     private Integer newsVotes = null;
-    private Categories categories = null;
+    private String categories = null;
 
     private Long authorId = null;
     private String authorName = null;

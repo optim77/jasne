@@ -1,13 +1,12 @@
 package com.example.dstay.main.Controller.User;
 
 import com.example.dstay.main.DTO.*;
-import com.example.dstay.main.Entity.User;
 import com.example.dstay.main.Repository.UserRepository;
 import com.example.dstay.main.Security.JwtUtils;
 import com.example.dstay.main.Services.UserService;
+import com.example.dstay.news.DTOs.NewsDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +56,11 @@ public class UserController {
     @PostMapping("/profile/comments/delete")
     public ResponseEntity<HttpStatus> userCommentsActivityDelete(@RequestBody DeleteActivityDTO deleteActivityDTO){
         return userService.execUserCommentsActivityDelete(deleteActivityDTO);
+    }
+
+    @PutMapping("/profile/news/update")
+    public ResponseEntity<HttpStatus> userNewsActivityUpdate(@RequestBody UpdateNewsDTO newsDTO){
+        return userService.execUserNewsActivityUpdate(newsDTO);
     }
 
     @GetMapping("/profile/delete")

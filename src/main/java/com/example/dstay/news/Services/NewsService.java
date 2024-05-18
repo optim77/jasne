@@ -1,5 +1,7 @@
 package com.example.dstay.news.Services;
 
+import com.example.dstay.categories.Entity.Category;
+import com.example.dstay.categories.Repository.CategoryRepository;
 import com.example.dstay.main.Entity.User;
 import com.example.dstay.main.Repository.UserRepository;
 import com.example.dstay.main.Security.JwtUtils;
@@ -13,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 
@@ -23,10 +24,12 @@ public class NewsService {
 
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
 
-    public NewsService(NewsRepository newsRepository, UserRepository userRepository) {
+    public NewsService(NewsRepository newsRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
         this.newsRepository = newsRepository;
         this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public NewsWithAuthorDetails execGetNewsById(Long newsId){
@@ -38,7 +41,8 @@ public class NewsService {
             newsWithAuthorDetails.setNewsDescription(news.get().getDescription());
             newsWithAuthorDetails.setNewsCreatedAt(news.get().getCreated_at());
             newsWithAuthorDetails.setNewsVotes(news.get().getVotes());
-            newsWithAuthorDetails.setCategories(news.get().getCategories());
+            newsWithAuthorDetails.setCategories(news.get().getCategory().getName());
+            newsWithAuthorDetails.setNewsUrl(news.get().getURL());
 
             newsWithAuthorDetails.setAuthorId(news.get().getAuthor().getId());
             newsWithAuthorDetails.setAuthorName(news.get().getAuthor().getName());
@@ -52,12 +56,16 @@ public class NewsService {
 
     public Long execUploadNews(NewsDTO newsDTO) {
         News news = new News();
-        news.setAuthor(userResolver(newsDTO.getAuthor()));
-        news.setCategories(newsDTO.getCategories());
-        news.setURL(newsDTO.getURL());
-        news.setDescription(newsDTO.getDescription());
-        news.setCreated_at(new Date());
-        news.setTitle(newsDTO.getTitle());
+        Optional<Category> category = categoryRepository.findById(newsDTO.getCategories());
+        if (category.isPresent()){
+            news.setAuthor(userResolver(newsDTO.getAuthor()));
+            news.setCategory(category.get());
+            news.setURL(newsDTO.getURL());
+            news.setDescription(newsDTO.getDescription());
+            news.setCreated_at(new Date());
+            news.setTitle(newsDTO.getTitle());
+        }
+
         return newsRepository.save(news).getId();
 
 

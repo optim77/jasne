@@ -1,5 +1,6 @@
 package com.example.dstay.news.Entity;
 
+import com.example.dstay.categories.Entity.Category;
 import com.example.dstay.main.Entity.User;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -16,7 +17,7 @@ public class News {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "author", nullable = false)
     private User author;
 
@@ -32,8 +33,9 @@ public class News {
     @Column(name = "created_at", nullable = false, unique = false)
     private Date created_at;
 
-    @Enumerated(EnumType.STRING)
-    private Categories categories;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "votes", nullable = true, unique = false)
     private int votes;

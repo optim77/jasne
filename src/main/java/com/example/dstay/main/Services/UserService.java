@@ -1,5 +1,7 @@
 package com.example.dstay.main.Services;
 
+import com.example.dstay.categories.Entity.Category;
+import com.example.dstay.categories.Repository.CategoryRepository;
 import com.example.dstay.comments.Entity.Comment;
 import com.example.dstay.comments.Repository.CommentRepository;
 import com.example.dstay.main.DTO.*;
@@ -27,13 +29,15 @@ public class UserService {
     private final NewsRepository newsRepository;
     private final CommentRepository commentRepository;
     private final NewsActivityRepository newsActivityRepository;
+    private final CategoryRepository categoryRepository;
     private final JwtUtils jwtUtils;
 
-    public UserService(UserRepository userRepository, NewsRepository newsRepository, CommentRepository commentRepository, NewsActivityRepository newsActivityRepository, JwtUtils jwtUtils) {
+    public UserService(UserRepository userRepository, NewsRepository newsRepository, CommentRepository commentRepository, NewsActivityRepository newsActivityRepository, CategoryRepository categoryRepository, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
         this.newsRepository = newsRepository;
         this.commentRepository = commentRepository;
         this.newsActivityRepository = newsActivityRepository;
+        this.categoryRepository = categoryRepository;
         this.jwtUtils = jwtUtils;
     }
 
@@ -130,8 +134,8 @@ public class UserService {
             User user =  userRepository.findByUsernameOrEmail(email,email);
             Optional<News> news = newsRepository.findById(deleteActivityDTO.getId());
             if (news.isPresent()){
-                if (Objects.equals(news.get().getId(), user.getId())){
-                    newsRepository.deleteById(news.get().getId());
+                if (Objects.equals(news.get().getAuthor().getId(), user.getId())){
+                    newsRepository.delete(news.get());
                     return ResponseEntity.ok().build();
                 }
             }
@@ -153,6 +157,38 @@ public class UserService {
                 }
             }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    public ResponseEntity<HttpStatus> execUserNewsActivityUpdate(UpdateNewsDTO newsDTO){
+        try{
+            String email = jwtUtils.extractUsername(newsDTO.getAuthor());
+            User user =  userRepository.findByUsernameOrEmail(email,email);
+            Optional<News> news = newsRepository.findById(newsDTO.getId());
+            if(news.isPresent()){
+                if (Objects.equals(user.getId(), news.get().getAuthor().getId())){
+                    if (news.get().getDescription() == null || !news.get().getDescription().equals(newsDTO.getDescription())){
+                        news.get().setDescription(newsDTO.getDescription());
+                    }
+                    if (news.get().getTitle() == null || !news.get().getTitle().equals(newsDTO.getTitle())){
+                        news.get().setTitle(newsDTO.getTitle());
+                    }
+                    if (news.get().getURL() == null || !news.get().getURL().equals(newsDTO.getURL())){
+                        news.get().setURL(newsDTO.getURL());
+                    }
+                    if (news.get().getCategory() == null || !news.get().getCategory().getId().equals(newsDTO.getCategories())){
+                        Category category = categoryRepository.findById(newsDTO.getCategories()).get();
+                        news.get().setCategory(category);
+                    }
+                    newsRepository.save(news.get());
+                    return ResponseEntity.ok().build();
+                }
+            }else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.ok().build();
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

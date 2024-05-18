@@ -23,10 +23,6 @@ public class Element extends BaseEntity{
     private String image;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
-
-    @ManyToOne
     @JoinColumn(name = "author", nullable = false)
     private User author;
 }

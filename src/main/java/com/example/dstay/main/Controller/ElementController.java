@@ -30,11 +30,6 @@ public class ElementController {
         this.globalProps = globalProps;
     }
 
-    @GetMapping(value = "/element/{category_id}/all")
-    public Page<Element> getAllByCategory(@PathVariable Long category_id, Pageable pageable){
-        return elementRepository.findByCategoryId(category_id, pageable);
-    }
-
     //only for auth testing, change later
     @GetMapping(value = "/element/random", consumes = "application/json")
     public Page<Element> getRandomElements(Pageable pageable){
@@ -76,9 +71,6 @@ public class ElementController {
             }
             if (sendElement.getDescription() != null){
                 repositoryElement.get().setDescription(sendElement.getDescription());
-            }
-            if (sendElement.getCategory() != null){
-                repositoryElement.get().setCategory(sendElement.getCategory());
             }
             return new ResponseEntity<>(repositoryElement.get(), HttpStatus.OK);
         }

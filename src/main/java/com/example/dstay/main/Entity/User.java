@@ -1,6 +1,7 @@
 package com.example.dstay.main.Entity;
 
 import com.example.dstay.main.Enums.Role;
+import com.example.dstay.news.Entity.News;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.rest.core.annotation.RestResource;
@@ -98,4 +99,7 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+    private Set<News> news;
 }
