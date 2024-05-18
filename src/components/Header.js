@@ -15,6 +15,7 @@ import View from "./News/View";
 import CookieGetter from "./Services/CookieGetter";
 import {Dropdown} from "react-bootstrap";
 import Activity from "./Activity";
+import Edit from "./News/Edit";
 
 function Header(){
 
@@ -79,6 +80,7 @@ function Header(){
                 <Route path="/recover" element={<Recovery />} />
                 <Route path="/create" element={<Create />} />
                 <Route path="/news/:id" element={<View />} />
+                <Route path="/edit_news/:id" element={<Edit />} />
 
             </Routes>
         </BrowserRouter>

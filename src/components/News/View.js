@@ -21,6 +21,7 @@ function View(){
     useEffect(() => {
         getNews();
         fetchComments();
+        console.log(urls)
 
     }, [id]);
 

@@ -57,7 +57,7 @@ function Create_News(){
     }, [cookie]);
     let getCategories = async () => {
         try{
-            let res = await fetch("http://localhost:8080/categories", {
+            let res = await fetch("http://localhost:8080/category/all", {
                 method: "GET",
                 "Content-Type": "application/json",
             }).then((res) => {

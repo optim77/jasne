@@ -10,7 +10,6 @@ function AuthProvider({children}){
     const [message, setMessage] = useState("");
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem("jasne") || "");
-    const [userCookie, setUserCookie] = useCookies('access_token')
 
     const processLogin = async (email, password) => {
         try {
@@ -33,7 +32,6 @@ function AuthProvider({children}){
                             setUser(data);
                             let expires = new Date()
                             expires.setTime(expires.getTime() + 9000000000)
-                            setUserCookie('access_token', data.token, { path: '/',  expires})
                         }else{
                             return 404;
                         }
@@ -53,7 +51,6 @@ function AuthProvider({children}){
         setUser(null);
         setToken("");
         localStorage.removeItem('jasne')
-        setUserCookie('access_token', null);
 
         window.location.reload();
     };

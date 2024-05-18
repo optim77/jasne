@@ -1,5 +1,5 @@
 import CookieGetter from "./Services/CookieGetter";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import RedirectIfNotLogged from "./Services/RedirectIfNotLogged";
 import data from "bootstrap/js/src/dom/data";
 import ReactPaginate from 'react-paginate';
@@ -14,7 +14,6 @@ function Activity() {
     const [loading, setLoading] = useState(true);
     const [pageNewsCount, setPageNewsCount] = useState(0);
     const [pageCommentsCount, setPageCommentsCount] = useState(0);
-
 
     const fetchNewsActivity = async (pageNewsCount) => {
         try {
@@ -84,6 +83,7 @@ function Activity() {
             })
             if(res.ok){
                 setMessage('News was deleted');
+                fetchNewsActivity(0)
             }else
             {
                 setMessage('Something went wrong');
@@ -142,8 +142,10 @@ function Activity() {
                                         {news['content'] && news['content'].length > 0 ? news['content'].map(content => (
                                             <div className="container mt-3">
                                                 <div className="row">
-                                                    <p className="col-8">{content.title.length > 50 ? `${content.title.substring(0, 50)}...` : content.title}</p>
-                                                    <Link className="btn btn-primary m-1 col-1">Edit</Link>
+                                                    <Link to={'/news/' + content.id} className="text-decoration-none fw-bold text-white" ><p className="col-8">{content.title.length > 50 ? `${content.title.substring(0, 50)}...` : content.title}</p></Link>
+                                                    <Link to={"/edit_news/" + content.id} className="btn btn-primary m-1 col-1">Edit</Link>
+
+
                                                     <button onClick={() => handleDeleteNews(content.id)} className="btn btn-danger m-1 col-1">Delete</button>
 
 
