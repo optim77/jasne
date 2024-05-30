@@ -36,8 +36,10 @@ public class CategoryService {
     @PostConstruct
     public void createCategories(){
         List<String> categories = new LinkedList<>();
-        categories.add("Med");
+        categories.add("Nature");
         categories.add("Politics");
+        categories.add("Tech");
+        categories.add("Med");
         for (String cat : categories){
             Category category = new Category();
             category.setName(cat);

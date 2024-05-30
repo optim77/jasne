@@ -2,9 +2,11 @@ package com.example.dstay.comments.Controller;
 
 import com.example.dstay.comments.DTO.CommentDTO;
 import com.example.dstay.comments.DTO.CommentToNewsDTO;
+import com.example.dstay.comments.DTO.CommentWithNewsDTO;
 import com.example.dstay.comments.Entity.Comment;
 import com.example.dstay.comments.Repository.CommentRepository;
 import com.example.dstay.comments.Services.CommentService;
+import com.example.dstay.news.Entity.News;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -37,13 +40,14 @@ public class CommentsController {
 
     // TODO
     @GetMapping("/comment/{comment_id}")
-    public Page<Comment> getCommentById(@PathVariable Long comment_id, Pageable pageable){
-        return commentRepository.findAllByNews(comment_id, pageable);
+    public CommentWithNewsDTO getCommentByIdWithNews(@PathVariable Long comment_id){
+        return commentService.getCommentByIdWithNews(comment_id);
+
     }
 
-    @PatchMapping("/comment/{comment_id}")
-    public Comment updateComment(@PathVariable Long comment_id, @RequestBody Comment comment){
-        return commentService.execUpdateComment(comment_id, comment);
+    @PatchMapping("/comment")
+    public ResponseEntity<HttpStatus> updateComment(@RequestBody CommentDTO comment){
+        return commentService.execUpdateComment(comment);
     }
 
     @DeleteMapping("/comment/{comment_id}")

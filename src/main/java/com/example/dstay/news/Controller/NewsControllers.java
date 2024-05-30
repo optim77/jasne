@@ -1,5 +1,7 @@
 package com.example.dstay.news.Controller;
 
+import com.example.dstay.categories.Entity.Category;
+import com.example.dstay.news.DTOs.CategoryNewsDTO;
 import com.example.dstay.news.DTOs.NewsDTO;
 import com.example.dstay.news.DTOs.NewsWithAuthorDetails;
 import com.example.dstay.news.Entity.News;
@@ -9,14 +11,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping(produces = "application/json")
 @CrossOrigin(origins = "*")
+@RestResource
 public class NewsControllers {
 
     private final NewsRepository newsRepository;
@@ -50,5 +56,15 @@ public class NewsControllers {
     @PatchMapping("/update/news/{news_id}")
     public News updateNews(@PathVariable Long news_id, @RequestBody News news) throws ChangeSetPersister.NotFoundException {
         return newsService.execUpdateNews(news_id, news);
+    }
+
+    @GetMapping("/news/category/{category}")
+    public Page<CategoryNewsDTO> getNewsByCategory(@PathVariable String category, Pageable pageable){
+        return newsService.execGetNewsByCategory(category, pageable);
+    }
+
+    @GetMapping("/top_week_all")
+    public Page<CategoryNewsDTO> getTopOfTheWeek(){
+        return newsService.execGetTopOfTheWeek();
     }
 }

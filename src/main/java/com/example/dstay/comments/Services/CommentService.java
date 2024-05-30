@@ -2,6 +2,7 @@ package com.example.dstay.comments.Services;
 
 import com.example.dstay.comments.DTO.CommentDTO;
 import com.example.dstay.comments.DTO.CommentToNewsDTO;
+import com.example.dstay.comments.DTO.CommentWithNewsDTO;
 import com.example.dstay.comments.Entity.Comment;
 import com.example.dstay.comments.Repository.CommentRepository;
 import com.example.dstay.main.Entity.User;
@@ -18,10 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CommentService {
@@ -39,17 +37,17 @@ public class CommentService {
         this.jwtUtilsService = jwtUtilsService;
     }
 
-    public ResponseEntity<String> execUploadComment(CommentDTO sent_comment){
+    public ResponseEntity<String> execUploadComment(CommentDTO sent_comment) {
         Optional<News> news = newsRepository.findById(sent_comment.getNews_id());
         String username = jwtUtilsService.extractUsername(sent_comment.getToken());
         Optional<User> user = Optional.ofNullable(userRepository.findByUsernameOrEmail(username, username));
-        if (news.isPresent() && user.isPresent()){
+        if (news.isPresent() && user.isPresent()) {
             Comment comment = new Comment();
             comment.setCreationDate(new Date());
             comment.setContent(sent_comment.getContent());
             comment.setNews(news.get());
             comment.setAuthor(user.get());
-            Comment saved =  commentRepository.save(comment);
+            Comment saved = commentRepository.save(comment);
             return new ResponseEntity<>(HttpStatus.OK);
 
         }
@@ -68,19 +66,31 @@ public class CommentService {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    public Comment execUpdateComment(Long comment_id, Comment comment){
-        Comment comment_to_update = commentRepository.findById(comment_id).orElseThrow();
-        if (comment.getContent() != null){
-            comment_to_update.setContent(comment.getContent());
+    public ResponseEntity<HttpStatus> execUpdateComment(CommentDTO comment) {
+        try {
+            Optional<Comment> comment_to_update = commentRepository.findById(comment.getComment_id());
+            JwtUtils jwtUtils = new JwtUtils();
+            String user_action = jwtUtils.extractUsername(comment.getToken());
+            if (Objects.equals(user_action, comment_to_update.get().getAuthor().getEmail())) {
+                if (comment.getContent() != null) {
+                    comment_to_update.get().setContent(comment.getContent());
+                    commentRepository.save(comment_to_update.get());
+                }
+            }else{
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return comment_to_update;
+        return ResponseEntity.ok().build();
     }
 
-    public List<CommentToNewsDTO> execGetCommentsToNews(Long news_id , Pageable pageable){
+    public List<CommentToNewsDTO> execGetCommentsToNews(Long news_id, Pageable pageable) {
         Page<Comment> comments = commentRepository.findByNews_Id_OrderByCreationDateDesc(news_id, pageable);
         List<CommentToNewsDTO> commentToNewsDTOS = new ArrayList<>();
 
-        for(Comment comment : comments){
+        for (Comment comment : comments) {
             CommentToNewsDTO toSave = new CommentToNewsDTO();
             toSave.setAuthor_comment_id(comment.getAuthor().getId());
             toSave.setNews_id(comment.getNews().getId());
@@ -91,5 +101,25 @@ public class CommentService {
             commentToNewsDTOS.add(toSave);
         }
         return commentToNewsDTOS;
+    }
+
+    public CommentWithNewsDTO getCommentByIdWithNews(Long comment_id) {
+        try {
+            CommentWithNewsDTO commentDTO = new CommentWithNewsDTO();
+            Optional<Comment> comment = commentRepository.findById(comment_id);
+            Optional<News> news = newsRepository.findById(comment.get().getNews().getId());
+            if (news.isPresent()) {
+                commentDTO.setContent(comment.get().getContent());
+                commentDTO.setCommentVotes(comment.get().getVotes());
+                commentDTO.setNews_id(news.get().getId());
+                commentDTO.setAuthorNews(news.get().getAuthor().getId());
+                commentDTO.setNewsTitle(news.get().getTitle());
+                commentDTO.setNewsVotes(news.get().getVotes());
+                return commentDTO;
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

@@ -12,6 +12,7 @@ import java.util.Date;
 @Setter
 @Getter
 public class CommentDTO {
+    private Long comment_id;
     private Long news_id;
     private String content;
     private String token;
