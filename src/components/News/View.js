@@ -16,12 +16,9 @@ function View(){
 
     const navigate = useNavigate();
 
-
-
     useEffect(() => {
         getNews();
         fetchComments();
-        console.log(urls)
 
     }, [id]);
 
@@ -31,8 +28,6 @@ function View(){
         if (!cookie){
             setMessage("You must be logged in to comment")
         }else {
-
-
             try {
                 let res = await fetch("http://localhost:8080/add_comment", {
                     method: "POST",
@@ -72,7 +67,6 @@ function View(){
                     console.log(data);
                 })
             }
-
         }catch (e){
             setMessage('Something gone wrong');
         }
@@ -89,7 +83,6 @@ function View(){
                 try {
                     res.json().then(content => {
                         console.log(content);
-
                         try {
                             setContent(content);
                             try{
@@ -103,11 +96,9 @@ function View(){
                             }catch (e){
 
                             }
-
                         } catch (e) {
                             navigate("/");
                         }
-
                     }).catch(error => {
                         console.error("Error handling response:", e);
                         navigate("/");
@@ -116,17 +107,18 @@ function View(){
                     console.error("Error handling response:", e);
                     navigate("/");
                 }
-
             })
         }catch (e){
             navigate("/")
         }
     }
 
+    const handleUpvote = async (e) => {
+        
+    }
 
     return(
         <>
-
             <div>
                 {content ? (
                     <div>
@@ -136,7 +128,6 @@ function View(){
                                     {
                                         message ? (<p className='border   text-danger'>{message}</p>) : <p></p>
                                     }
-
                                 </div>
                                 <div className="text-end text-capitalize text-white">
                                     <div className="container">
@@ -154,7 +145,6 @@ function View(){
                                             <p className='col-2 text-center bg-pop shadow rounded-3 mt-1'>{content.categories}</p>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div className="text-start text-capitalize text-white">
                                     <h4 className='text-white bg-dark'>{content.newsTitle}</h4>
@@ -172,16 +162,14 @@ function View(){
                                             ))
                                         }
                                     </ul>
-
                                 </div>
                                 <div className="text-start text-white">
                                     <div className="container">
                                         <div className="row">
-                                            <button className="col-1 btn btn-primary">Up</button>
+                                            <button onClick={handleUpvote} className="col-1 btn btn-primary">Up</button>
                                             <p className="col-1 mt-3">{content.newsVotes}</p>
                                         </div>
                                     </div>
-
                                 </div>
                                 <div className="mt-2 mb-2 text-white">
                                     <p>Comments</p>
@@ -196,7 +184,6 @@ function View(){
                                         <input type="submit" className="btn btn-success mt-2 justify-content-start" value="Send" />
                                     </form>
                                 </div>
-
                                 <div className='pt-5 text-start text-white'>
                                     {comments.map(comment => (
                                         <div>
@@ -211,7 +198,6 @@ function View(){
                                                         }).split(',')[0]
                                                     }</p>
                                                 </div>
-
                                             </div>
                                             <div className="container">
                                                 <div className="row">
@@ -223,7 +209,6 @@ function View(){
                                                     <p className="col-10 text-end "> ↑ {comment.votes}</p>
                                                 </div>
                                             </div>
-
                                             <div className="mt-2 mb-2 text-white">
                                                 <hr/>
                                             </div>
@@ -231,12 +216,8 @@ function View(){
 
                                     ))}
                                 </div>
-
                             </div>
-
                         </div>
-
-
                     </div>
                 ) : (
                     <p>Loading...</p>
