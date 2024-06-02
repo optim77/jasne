@@ -65,6 +65,9 @@ public class User implements UserDetails {
     @Column(name = "longitude", unique = false, nullable = true)
     private Double longitude;
 
+    @Column(name = "enable", unique = false)
+    private boolean enable;
+
     @Enumerated(EnumType.STRING)
     private Role role;
     @Override

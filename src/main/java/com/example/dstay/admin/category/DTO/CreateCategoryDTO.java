@@ -1,4 +1,4 @@
-package com.example.dstay.categories.DTOs;
+package com.example.dstay.admin.category.DTO;
 
 import lombok.Data;
 import lombok.Getter;
@@ -11,4 +11,5 @@ public class CreateCategoryDTO {
     private String name;
     private String image;
     private String description;
+    private String token;
 }

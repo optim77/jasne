@@ -21,6 +21,9 @@ public class Category {
     @Column(name = "name", nullable = false, length = 255, unique = true)
     private String name;
 
+    @Column(name = "description", nullable = true, length = 255, unique = false)
+    private String description;
+
     @Column(name = "news_counter", nullable = true)
     private Integer news_counter;
 

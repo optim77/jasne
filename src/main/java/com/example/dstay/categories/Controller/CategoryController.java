@@ -1,12 +1,9 @@
 package com.example.dstay.categories.Controller;
 
-import com.example.dstay.categories.DTOs.CreateCategoryDTO;
 import com.example.dstay.categories.Entity.Category;
 import com.example.dstay.categories.Repository.CategoryRepository;
 import com.example.dstay.categories.Service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,11 +20,6 @@ public class CategoryController {
     public CategoryController(CategoryService categoryService, CategoryRepository categoryRepository) {
         this.categoryService = categoryService;
         this.categoryRepository = categoryRepository;
-    }
-
-    @PostMapping("/category/create")
-    public ResponseEntity<HttpStatus> createCategory(@RequestBody CreateCategoryDTO createCategoryDTO){
-        return categoryService.execCreateCategory(createCategoryDTO);
     }
 
     @GetMapping("/category/all")
