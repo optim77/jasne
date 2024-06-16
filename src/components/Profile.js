@@ -1,4 +1,3 @@
-import {useAuth} from "./Services/AuthProvider";
 import {Navigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import CookieGetter from "./Services/CookieGetter";

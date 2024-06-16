@@ -1,6 +1,5 @@
-import {Link, redirect, useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import RedirectIfLogged from "../Services/RedirectIfLogged";
 import RedirectIfNotLogged from "../Services/RedirectIfNotLogged";
 import cookieGetter from "../Services/CookieGetter";
 

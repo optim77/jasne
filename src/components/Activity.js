@@ -1,8 +1,6 @@
 import CookieGetter from "./Services/CookieGetter";
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import RedirectIfNotLogged from "./Services/RedirectIfNotLogged";
-import data from "bootstrap/js/src/dom/data";
-import ReactPaginate from 'react-paginate';
 import {Link} from "react-router-dom";
 
 function Activity() {
@@ -63,8 +61,6 @@ function Activity() {
             setMessage('Something gone wrong with fetching comments!');
         }
     }
-
-
     const handleDeleteNews = async (id) => {
         try {
             let res = await fetch("http://localhost:8080/profile/news/delete", {
@@ -88,7 +84,6 @@ function Activity() {
             setMessage('Something went wrong');
         }
     }
-
     const handleDeleteComments = async (id) => {
         try {
             let res = await fetch("http://localhost:8080/profile/comments/delete", {

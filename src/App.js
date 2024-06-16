@@ -1,15 +1,16 @@
 import './styles/App.css';
 import Header from "./components/Header";
-import Main from "./components/Main";
-import Footer from "./components/Elements/Footer";
 import AuthProvider from "./components/Services/AuthProvider";
+import AuthProviderAdmin from "./components/Admin/AuthProviderAdmin";
 
 function App() {
   return (
     <div className="App">
 
         <AuthProvider>
-            <Header />
+            <AuthProviderAdmin>
+                <Header />
+            </AuthProviderAdmin>
         </AuthProvider>
         {/*<Footer />*/}
     </div>

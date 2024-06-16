@@ -1,19 +1,14 @@
 import {createContext, useContext, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {useCookies} from "react-cookie";
 
 const AuthContext = createContext();
 
 function AuthProvider({children}){
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(localStorage.getItem("jasne") || "");
 
     const processLogin = async (email, password) => {
         try {
-            let res = await fetch("http://localhost:8080/authenticate", {
+            await fetch("http://localhost:8080/authenticate", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -27,7 +22,6 @@ function AuthProvider({children}){
                 try{
                     res.json().then(data => {
                         if(data){
-
                             localStorage.setItem('jasne', data.token)
                             setUser(data);
                             let expires = new Date()
@@ -51,7 +45,6 @@ function AuthProvider({children}){
         setUser(null);
         setToken("");
         localStorage.removeItem('jasne')
-
         window.location.reload();
     };
 

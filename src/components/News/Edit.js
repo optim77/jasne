@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import View from "./View";
 import cookieGetter from "../Services/CookieGetter";
 
 function Edit() {
@@ -15,7 +14,7 @@ function Edit() {
     const [selectedCategory, setSelectedCategory] = useState('');
     const {id} = useParams();
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(() => {
         getNews();
@@ -25,41 +24,38 @@ function Edit() {
 
     const getNews = async (e) => {
         try {
-            let res = await fetch("http://localhost:8080/news/" + id, {
-                method: "GET",
+            await fetch("http://localhost:8080/news/" + id, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Accept": "application/json"
                 },
+                body: JSON.stringify({
+                    token: localStorage.getItem("jasne")
+                })
             }).then((res) => {
                 try {
                     res.json().then(content => {
-                        console.log(content);
-
+                        console.log(content)
                         try {
                             setContent(content);
                             try {
-                                let urls = [];
-                                if (content.newsUrl.include(';')) {
-                                    urls = content.newsUrl.split(';')
-                                } else {
-                                    urls = content.newsUrl;
-                                }
-                                setUrls(urls);
+                                setUrls(content.newsUrl.split(';'));
+                                setIsLoaded(true);
                             } catch (e) {
-
+                                console.log(312312)
                             }
 
                         } catch (e) {
                             navigate("/");
                         }
 
-                    }).catch(error => {
-                        console.error("Error handling response:", e);
+                    }).catch(e => {
+                        console.log(2)
                         navigate("/");
                     });
                 } catch (e) {
-                    console.error("Error handling response:", e);
+                    console.log(1)
                     navigate("/");
                 }
 
@@ -71,7 +67,7 @@ function Edit() {
 
     let getCategories = async () => {
         try {
-            let res = await fetch("http://localhost:8080/category/all", {
+            await fetch("http://localhost:8080/category/all", {
                 method: "GET",
                 "Content-Type": "application/json",
             }).then((res) => {
@@ -79,11 +75,8 @@ function Edit() {
                     setFetchedCategories(data);
                 })
             })
-            if (res.ok) {
-
-            }
         } catch (e) {
-            return 503;
+            setMessage("Cannot fetch categories!");
         }
     }
     const handleCategoryChange = (e) => {
@@ -95,7 +88,7 @@ function Edit() {
         if(!selectedCategory){
             setSelectedCategory(content.categories);
         }
-        console.log(content)
+        console.log(content.categories)
         try {
             let res = await fetch('http://localhost:8080/profile/news/update', {
                 method: "PUT",
@@ -109,7 +102,7 @@ function Edit() {
                     url: updateUrls ? updateUrls : content.newsUrl,
                     description: updateDescription ? updateDescription : content.newsDescription,
                     title: updateTitle ? updateTitle : content.newsTitle,
-                    categories: selectedCategory ? selectedCategory : content.categories
+                    categories: selectedCategory ? selectedCategory : content.categories_id
                 })
             })
             if(res.ok){
@@ -126,7 +119,7 @@ function Edit() {
         <>
 
             <div>
-                {content ? (
+                {isLoaded ? (
                     <div>
                         <div className="container justify-content-center">
 
@@ -155,7 +148,7 @@ function Edit() {
                                                 <p className='col-2 '>
                                                     <select onChange={handleCategoryChange}
                                                             className="form-group m-auto mt-3 form-select col-2">
-                                                        <option selected>{content.categories}</option>
+                                                        <option id={content.categories_id} selected>{content.categories}</option>
                                                         {fetchedCategories.map(category => (
                                                             <option key={category.id}
                                                                     value={category.id}>{category.name}</option>
@@ -189,7 +182,7 @@ function Edit() {
                                         <div className="form-group m-auto mt-3">
                                             <label className="text-white" htmlFor="urls">URLS</label>
                                             <textarea className="form-control bg-dark text-white" name='urls' id='urls'
-                                                      defaultValue={content.urls}
+                                                      defaultValue={urls}
                                                       onChange={(e) => setUpdateUrls(e.target.value)}/>
                                         </div>
 
@@ -206,7 +199,7 @@ function Edit() {
 
                     </div>
                 ) : (
-                    <p>Loading...</p>
+                    <p className="text-white p-5">Loading...</p>
                 )}
             </div>
         </>

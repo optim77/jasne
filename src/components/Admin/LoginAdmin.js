@@ -1,28 +1,32 @@
-import {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import {useAuth} from "./Services/AuthProvider";
-import RedirectIfLogged from "./Services/RedirectIfLogged";
+import {useEffect, useState} from "react";
+import {Link, redirect, useNavigate} from "react-router-dom";
+
+import {useAdminAuth} from "./AuthProviderAdmin";
 
 
-function Login() {
+
+function LoginAdmin() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-    const auth = useAuth();
+    const auth = useAdminAuth();
     const navigate = useNavigate();
+    useEffect(() => {
+        if (localStorage.getItem("jasne_adm")){
+            navigate("/admin/panel");
+        }
+    }, []);
 
-    RedirectIfLogged();
-
-    let handleLogin = async (e) => {
+    let handleAdminLogin = async (e) => {
         e.preventDefault();
         try {
-            auth.processLogin(email, password).then((res) => {
+            auth.processLoginAdmin(email, password).then((res) => {
+                console.log(res)
                 if(res === 200){
                     window.location.reload();
-                    navigate("/categories")
+                    navigate("/admin/panel");
                 }
-                console.log(res);
-                if (res === 404) {
+                if (res === 500) {
                     setMessage("Wrong Credentials");
                 } else if (res === 503) {
                     setMessage("Something went wrong");
@@ -40,8 +44,8 @@ function Login() {
             <div className="container d-flex justify-content-center">
                 <div className="row">
                     <div className="bg-dark mt-5 p-5 rounded-3 shadow">
-                        <form onSubmit={handleLogin} method='post'>
-                            <h2 className="text-white">Jasne!</h2>
+                        <form onSubmit={handleAdminLogin} method='post'>
+                            <h2 className="text-white">Admin Panel</h2>
                             <p className="alert text-danger">{message}</p>
                             <div className="form-group m-auto">
                                 <label className="text-white" htmlFor="email">Email</label>
@@ -57,18 +61,9 @@ function Login() {
                             </div>
                             <input className="btn btn-success mt-4 w-100" type="submit" value="Login"/>
                         </form>
-                        <p className="text-white mt-3">New on Jasne!</p>
-                        <Link to="/sign-up" className="text-white">Sign Up</Link>
                     </div>
                 </div>
 
-            </div>
-            <div className="container d-flex justify-content-center">
-                <div className="row">
-                    <div className="col- p-3 text-center">
-                        <Link to="/recover" >Forgot password?</Link>
-                    </div>
-                </div>
             </div>
         </>
 
@@ -76,4 +71,4 @@ function Login() {
     )
 }
 
-export default Login;
+export default LoginAdmin;

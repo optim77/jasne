@@ -1,7 +1,5 @@
 import {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
-import RedirectIfNotLogged from "./Services/RedirectIfNotLogged";
-import {wait} from "@testing-library/user-event/dist/utils";
 import RedirectIfLogged from "./Services/RedirectIfLogged";
 
 function Register() {
@@ -48,12 +46,6 @@ function Register() {
             setMessage("Something went wrong");
             setNotification("alert text-danger");
         }
-    }
-
-    let csrf = (t) => {
-        t = Math.floor(Math.random() * 10000) * Math.floor(Math.random() * 10000);
-        setToken(t);
-        return t;
     }
 
     return (

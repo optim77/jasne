@@ -12,7 +12,6 @@ function Categories() {
     const [isLoaded, setIsLoaded] = useState()
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
-    const [pageSize, setPageSize] = useState(20);
 
     useEffect(() => {
         getCategories();
@@ -21,7 +20,7 @@ function Categories() {
 
     const getCategories = async () => {
         try {
-            let res = await fetch("http://localhost:8080/category/all", {
+            await fetch("http://localhost:8080/category/all", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -32,9 +31,6 @@ function Categories() {
                 })
 
             })
-            if (!res.ok) {
-                setMessage('Something get wrong')
-            }
         } catch (err) {
             setMessage('Something get wrong')
         }
@@ -118,7 +114,6 @@ function Categories() {
 
                                     <hr/>
                                 </div>
-
                             )
                         )
                         }
@@ -143,9 +138,7 @@ function Categories() {
             </div>
 
         </div>
-
     )
-
 }
 
 export default Categories;
