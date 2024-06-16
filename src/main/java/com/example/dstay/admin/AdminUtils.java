@@ -10,7 +10,7 @@ public class AdminUtils {
         try {
             JwtUtils jwtUtils = new JwtUtils();
             String username = jwtUtils.extractUsername(token);
-            return userRepository.findByUsername(username).getRole() == Role.ADMIN;
+            return userRepository.findByUsernameOrEmail(username, username).getRole() == Role.ADMIN;
         } catch (Exception e) {
             return false;
         }

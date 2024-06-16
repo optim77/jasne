@@ -19,11 +19,13 @@ public class NewsWithAuthorDetails {
     private Date newsCreatedAt = null;
     private Integer newsVotes = null;
     private String categories = null;
+    private Long categories_id = null;
 
     private Long authorId = null;
     private String authorName = null;
     private String authorSurname = null;
     private String authorSpecialization = null;
     private Date authorCreatedAt = null;
+    private boolean isVoted = false;
 
 }

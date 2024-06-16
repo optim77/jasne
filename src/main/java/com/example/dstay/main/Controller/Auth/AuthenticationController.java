@@ -2,6 +2,9 @@ package com.example.dstay.main.Controller.Auth;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.nio.file.AccessDeniedException;
+
 @RestController
 @RequestMapping(produces = "application/json")
 @CrossOrigin(origins = "*")
@@ -20,5 +23,10 @@ public class AuthenticationController {
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest authenticationRequest){
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
+    }
+
+    @PostMapping("/admin/authenticate")
+    public ResponseEntity<AuthenticationResponse> adminAuthenticate(@RequestBody AuthenticationRequest authenticationRequest) throws AccessDeniedException {
+        return ResponseEntity.ok(authenticationService.adminAuthenticate(authenticationRequest));
     }
 }

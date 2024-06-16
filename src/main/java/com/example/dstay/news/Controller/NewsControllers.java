@@ -4,6 +4,7 @@ import com.example.dstay.categories.Entity.Category;
 import com.example.dstay.news.DTOs.CategoryNewsDTO;
 import com.example.dstay.news.DTOs.NewsDTO;
 import com.example.dstay.news.DTOs.NewsWithAuthorDetails;
+import com.example.dstay.news.DTOs.UserVoteDTO;
 import com.example.dstay.news.Entity.News;
 import com.example.dstay.news.Repository.NewsRepository;
 import com.example.dstay.news.Services.NewsService;
@@ -33,9 +34,9 @@ public class NewsControllers {
         this.newsService = newsService;
     }
 
-    @GetMapping("/news/{newsId}")
-    public NewsWithAuthorDetails getNewsById(@PathVariable Long newsId){
-        return newsService.execGetNewsById(newsId);
+    @PostMapping("/news/{newsId}")
+    public NewsWithAuthorDetails getNewsById(@PathVariable Long newsId, @RequestBody UserVoteDTO vote){
+        return newsService.execGetNewsById(newsId, vote.getToken());
     }
 
     @GetMapping("/news")
@@ -49,8 +50,8 @@ public class NewsControllers {
     }
 
     @DeleteMapping("/delete/news/{news_id}")
-    public ResponseEntity<HttpStatus> deleteNews(@PathVariable Long news_id) throws Exception {
-        return newsService.execDeleteNews(news_id);
+    public ResponseEntity<HttpStatus> deleteNews(@PathVariable Long news_id, @RequestBody UserVoteDTO token) throws Exception {
+        return newsService.execDeleteNews(news_id, token.getToken());
     }
 
     @PatchMapping("/update/news/{news_id}")

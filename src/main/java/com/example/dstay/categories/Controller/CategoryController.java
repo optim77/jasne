@@ -14,11 +14,9 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class CategoryController {
 
-    private final CategoryService categoryService;
     private final CategoryRepository categoryRepository;
 
-    public CategoryController(CategoryService categoryService, CategoryRepository categoryRepository) {
-        this.categoryService = categoryService;
+    public CategoryController(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 

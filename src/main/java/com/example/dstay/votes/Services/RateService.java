@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -29,45 +30,73 @@ public class RateService {
         this.userRepository = userRepository;
     }
 
-    public ResponseEntity<HttpStatus> execVoteNews(RateDTO rateDTO){
-        try{
+    public ResponseEntity<Integer> execVoteNews(RateDTO rateDTO) {
+        try {
             JwtUtils jwtUtils = new JwtUtils();
             String username = jwtUtils.extractUsername(rateDTO.getToken());
             User user = userRepository.findByUsernameOrEmail(username, username);
-            Optional<Vote> vote = voteRepository.findByUsers(user.getId());
-            if (vote.isPresent()){
-                voteRepository.delete(vote.get());
-                return ResponseEntity.ok().build();
-            }else {
-                Vote vote1 = new Vote();
-                vote1.setUsers(user);
-                Optional<News> news = newsRepository.findById(rateDTO.getNews_id());
-                news.ifPresent(vote1::setNews);
-                return ResponseEntity.ok().build();
+            Optional<News> newsOpt = newsRepository.findById(rateDTO.getNews_id());
+
+            if (newsOpt.isPresent()) {
+                News news = newsOpt.get();
+                Optional<Vote> voteOpt = voteRepository.findByUsersIdAndNewsId(user.getId(), news.getId());
+
+                if (voteOpt.isPresent()) {
+                    Vote vote = voteOpt.get();
+                    if (Objects.equals(vote.getNews().getId(), rateDTO.getNews_id())) {
+                        voteRepository.delete(vote);
+                        news.setVotes(news.getVotes() - 1);
+                        newsRepository.save(news);
+                        return ResponseEntity.ok(0);
+                    }
+                } else {
+                    Vote vote1 = new Vote();
+                    vote1.setUsers(user);
+                    vote1.setNews(news);
+                    news.setVotes(news.getVotes() + 1);
+                    newsRepository.save(news);
+                    voteRepository.save(vote1);
+                    return ResponseEntity.ok(1);
+                }
             }
-        }catch (Exception e){
+
+            return ResponseEntity.ok(0);
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    public ResponseEntity<HttpStatus> execVoteComment(RateDTO rateDTO){
-        try{
+    public ResponseEntity<Integer> execVoteComment(RateDTO rateDTO) {
+        try {
             JwtUtils jwtUtils = new JwtUtils();
             String username = jwtUtils.extractUsername(rateDTO.getToken());
             User user = userRepository.findByUsernameOrEmail(username, username);
-            Optional<Vote> vote = voteRepository.findByUsers(user.getId());
-            if (vote.isPresent()){
-                voteRepository.delete(vote.get());
-                return ResponseEntity.ok().build();
-            }else {
-                Vote vote1 = new Vote();
-                vote1.setUsers(user);
-                Optional<Comment> comment = commentRepository.findById(rateDTO.getComment_id());
-                comment.ifPresent(vote1::setComment);
-                return ResponseEntity.ok().build();
+
+            Optional<Comment> commentOpt = commentRepository.findById(rateDTO.getComment_id());
+            if (!commentOpt.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
+
+            Comment comment = commentOpt.get();
+            Optional<Vote> voteOpt = voteRepository.findByUsersIdAndCommentId(user.getId(), rateDTO.getComment_id());
+
+            if (voteOpt.isPresent()) {
+                voteRepository.delete(voteOpt.get());
+                comment.setVotes(comment.getVotes() - 1);
+                commentRepository.save(comment);
+                return ResponseEntity.ok(0);
+            } else {
+                Vote newVote = new Vote();
+                newVote.setUsers(user);
+                newVote.setComment(comment);
+                voteRepository.save(newVote);
+                comment.setVotes(comment.getVotes() + 1);
+                commentRepository.save(comment);
+                return ResponseEntity.ok(1);
+            }
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 }

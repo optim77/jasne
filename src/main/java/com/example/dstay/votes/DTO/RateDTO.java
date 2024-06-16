@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @Data
 public class RateDTO {
-    private Long news_id;
-    private Long comment_id;
-    private String token;
+    private Long news_id = null;
+    private Long comment_id = null;
+    private String token = null;
 }

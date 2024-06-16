@@ -1,5 +1,9 @@
-package com.example.dstay.main.Controller;
+/*
+    DEPRECATED - TO DELETE
+ */
 
+
+package com.example.dstay.main.Controller;
 import com.example.dstay.main.Entity.Element;
 import com.example.dstay.main.Props.GlobalProps;
 import com.example.dstay.main.Repository.ElementRepository;

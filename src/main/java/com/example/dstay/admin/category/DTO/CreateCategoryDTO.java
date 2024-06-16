@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @Data
 public class CreateCategoryDTO {
+    private Long id;
     private String name;
     private String image;
     private String description;

@@ -3,7 +3,10 @@ package com.example.dstay.admin.category.Controller;
 
 import com.example.dstay.admin.category.Service.CategoryAdministrationService;
 import com.example.dstay.admin.category.DTO.CreateCategoryDTO;
+import com.example.dstay.categories.Entity.Category;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,7 @@ public class CategoryAdministrationController {
         this.categoryAdministrationService = categoryAdministrationService;
     }
 
+
     @PostMapping("/admin/category/create")
     public ResponseEntity<HttpStatus> createCategory(@RequestBody CreateCategoryDTO createCategoryDTO){
         return categoryAdministrationService.execCreateCategory(createCategoryDTO);
@@ -32,7 +36,7 @@ public class CategoryAdministrationController {
     }
 
     @PostMapping("/admin/category/delete")
-    ResponseEntity<HttpStatus> deleteCategory(@RequestBody String token, @RequestBody Long category_id){
-        return  categoryAdministrationService.execDeleteCategory(token, category_id);
+    ResponseEntity<HttpStatus> deleteCategory(@RequestBody CreateCategoryDTO createCategoryDTO){
+        return  categoryAdministrationService.execDeleteCategory(createCategoryDTO);
     }
 }

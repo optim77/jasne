@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
     boolean deleteByUsernameOrEmail(JwtUtils jwtUtils, JwtUtils jwtUtils1);
 
+    Page<User> findAll(Pageable pageable);
+
 }

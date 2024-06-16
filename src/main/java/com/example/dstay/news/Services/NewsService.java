@@ -2,13 +2,15 @@ package com.example.dstay.news.Services;
 
 import com.example.dstay.categories.Entity.Category;
 import com.example.dstay.categories.Repository.CategoryRepository;
+import com.example.dstay.comments.Repository.CommentRepository;
 import com.example.dstay.main.Entity.User;
+import com.example.dstay.main.Enums.Role;
 import com.example.dstay.main.Repository.UserRepository;
 import com.example.dstay.main.Security.JwtUtils;
 import com.example.dstay.news.DTOs.CategoryNewsDTO;
 import com.example.dstay.news.DTOs.NewsDTO;
 import com.example.dstay.news.DTOs.NewsWithAuthorDetails;
-import jakarta.servlet.http.HttpServletRequest;
+import com.example.dstay.votes.Repository.VoteRepository;
 import com.example.dstay.news.Entity.News;
 import com.example.dstay.news.Repository.NewsRepository;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -30,14 +32,20 @@ public class NewsService {
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final VoteRepository voteRepository;
+    private final CommentRepository commentRepository;
+    private final JwtUtils jwtUtils;
 
-    public NewsService(NewsRepository newsRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
+    public NewsService(NewsRepository newsRepository, UserRepository userRepository, CategoryRepository categoryRepository, VoteRepository voteRepository, CommentRepository commentRepository, JwtUtils jwtUtils) {
         this.newsRepository = newsRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
+        this.voteRepository = voteRepository;
+        this.commentRepository = commentRepository;
+        this.jwtUtils = jwtUtils;
     }
 
-    public NewsWithAuthorDetails execGetNewsById(Long newsId){
+    public NewsWithAuthorDetails execGetNewsById(Long newsId, String token){
         Optional<News> news = newsRepository.findById(newsId);
         NewsWithAuthorDetails newsWithAuthorDetails = new NewsWithAuthorDetails();
         if(news.isPresent()){
@@ -47,6 +55,7 @@ public class NewsService {
             newsWithAuthorDetails.setNewsCreatedAt(news.get().getCreated_at());
             newsWithAuthorDetails.setNewsVotes(news.get().getVotes());
             newsWithAuthorDetails.setCategories(news.get().getCategory().getName());
+            newsWithAuthorDetails.setCategories_id(news.get().getCategory().getId());
             newsWithAuthorDetails.setNewsUrl(news.get().getURL());
 
             newsWithAuthorDetails.setAuthorId(news.get().getAuthor().getId());
@@ -54,6 +63,15 @@ public class NewsService {
             newsWithAuthorDetails.setAuthorSurname(news.get().getAuthor().getSurname());
             newsWithAuthorDetails.setAuthorSpecialization(news.get().getAuthor().getSpecialization());
             newsWithAuthorDetails.setAuthorCreatedAt(news.get().getAuthor().getCreatedAt());
+
+            if (token != null){
+                String username = jwtUtils.extractUsername(token);
+                Long userId = userRepository.findByUsernameOrEmail(username, username).getId();
+                if (voteRepository.findByUsersIdAndNewsId(userId, newsId).isPresent()){
+                    newsWithAuthorDetails.setVoted(true);
+                }
+            }
+
             return newsWithAuthorDetails;
         }
         return null;
@@ -69,6 +87,8 @@ public class NewsService {
             news.setDescription(newsDTO.getDescription());
             news.setCreated_at(new Date());
             news.setTitle(newsDTO.getTitle());
+            category.get().setNews_counter(category.get().getNews_counter() + 1);
+            categoryRepository.save(category.get());
         }
 
         return newsRepository.save(news).getId();
@@ -86,14 +106,19 @@ public class NewsService {
         return null;
     }
 
-    public ResponseEntity<HttpStatus> execDeleteNews(Long news_id) throws Exception {
+    public ResponseEntity<HttpStatus> execDeleteNews(Long news_id, String token) throws Exception {
         News news = newsRepository.findById(news_id).orElseThrow(ChangeSetPersister.NotFoundException::new);
         JwtUtils jwtUtils = new JwtUtils();
-        HttpServletRequest request = null;
-        String authHeader = request.getHeader("Authorization");
-        if (jwtUtils.extractUsername(authHeader) == news.getAuthor().getEmail()) {
+        String username = jwtUtils.extractUsername(token);
+        User user = userRepository.findByUsernameOrEmail(username, username);
+        if (Objects.equals(user.getId(), news.getAuthor().getId()) || user.getRole() == Role.ADMIN) {
+            Optional<Category> category = categoryRepository.findById(news.getCategory().getId());
+            if (category.isPresent()){
+                category.get().setNews_counter(category.get().getNews_counter() - 1);
+                categoryRepository.save(category.get());
+            }
+            commentRepository.deleteByNewsId(news_id);
             newsRepository.deleteById(news_id);
-
         }
         return ResponseEntity.ok(HttpStatus.OK);
     }

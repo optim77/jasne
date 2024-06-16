@@ -6,10 +6,12 @@ import com.example.dstay.admin.category.DTO.CreateCategoryDTO;
 import com.example.dstay.categories.Entity.Category;
 import com.example.dstay.categories.Repository.CategoryRepository;
 import com.example.dstay.main.Repository.UserRepository;
+import com.example.dstay.news.Repository.NewsRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +20,12 @@ import java.util.Optional;
 public class CategoryAdministrationService {
 
     private final CategoryRepository categoryRepository;
+    private final NewsRepository newsRepository;
     private final UserRepository userRepository;
 
-    public CategoryAdministrationService(CategoryRepository categoryRepository, UserRepository userRepository) {
+    public CategoryAdministrationService(CategoryRepository categoryRepository, NewsRepository newsRepository, UserRepository userRepository) {
         this.categoryRepository = categoryRepository;
+        this.newsRepository = newsRepository;
         this.userRepository = userRepository;
     }
 
@@ -45,7 +49,7 @@ public class CategoryAdministrationService {
     public ResponseEntity<HttpStatus> execUpdateCategory(CreateCategoryDTO createCategoryDTO){
         if(AdminUtils.adminRoleCheck(createCategoryDTO.getToken(), userRepository)){
             try{
-                Optional<Category> category = categoryRepository.findByName(createCategoryDTO.getName());
+                Optional<Category> category = categoryRepository.findById(createCategoryDTO.getId());
                 if (category.isPresent()){
                     if(createCategoryDTO.getName() != null){
                         category.get().setName(createCategoryDTO.getName());
@@ -58,16 +62,20 @@ public class CategoryAdministrationService {
                     }
                     categoryRepository.save(category.get());
                 }
+                return ResponseEntity.ok().build();
             }catch (Exception e){
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
+        }else{
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
     }
 
-    public ResponseEntity<HttpStatus> execDeleteCategory(String token, Long category_id){
-        if(AdminUtils.adminRoleCheck(token, userRepository)){
-            categoryRepository.deleteById(category_id);
+    public ResponseEntity<HttpStatus> execDeleteCategory(CreateCategoryDTO createCategoryDTO){
+        if(AdminUtils.adminRoleCheck(createCategoryDTO.getToken(), userRepository)){
+            newsRepository.deleteAllByCategoryId(createCategoryDTO.getId());
+            categoryRepository.deleteById(createCategoryDTO.getId());
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -83,8 +91,8 @@ public class CategoryAdministrationService {
         for (String cat : categories){
             Category category = new Category();
             category.setName(cat);
+            category.setNews_counter(0);
             categoryRepository.save(category);
         }
     }
-    //edit category
 }

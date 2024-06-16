@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -37,5 +39,20 @@ public class AuthenticationService {
         User user = userRepository.findByUsernameOrEmail(authenticationRequest.getEmail(), authenticationRequest.getEmail());
         String token = jwtUtils.generateToken(user);
         return AuthenticationResponse.builder().token(token).build();
+    }
+
+    public AuthenticationResponse adminAuthenticate(AuthenticationRequest authenticationRequest) throws AccessDeniedException {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        authenticationRequest.getEmail(),
+                        authenticationRequest.getPassword()));
+        User user = userRepository.findByUsernameOrEmail(authenticationRequest.getEmail(), authenticationRequest.getEmail());
+        if (user.getRole().equals(Role.ADMIN)){
+            String token = jwtUtils.generateToken(user);
+            return AuthenticationResponse.builder().token(token).build();
+        }else {
+            throw new AccessDeniedException("Access denied: User does not have admin privileges.");
+        }
+
     }
 }

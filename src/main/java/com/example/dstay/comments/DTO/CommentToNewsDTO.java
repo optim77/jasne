@@ -10,6 +10,7 @@ import java.util.Date;
 @Setter
 @Data
 public class CommentToNewsDTO {
+    private Long id;
     private Long news_id;
     private Long author_news_id;
     private Long author_comment_id;
@@ -17,4 +18,6 @@ public class CommentToNewsDTO {
     private String comment_content;
     private Date comment_create_at;
     private Integer votes;
+    private boolean user_voted = false;
+
 }

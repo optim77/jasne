@@ -6,6 +6,7 @@ import com.example.dstay.comments.Entity.Comment;
 import com.example.dstay.comments.Repository.CommentRepository;
 import com.example.dstay.main.DTO.*;
 import com.example.dstay.main.Entity.User;
+import com.example.dstay.main.Enums.Role;
 import com.example.dstay.main.Repository.UserRepository;
 import com.example.dstay.main.Security.JwtUtils;
 import com.example.dstay.news.Entity.News;
@@ -134,7 +135,7 @@ public class UserService {
             User user =  userRepository.findByUsernameOrEmail(email,email);
             Optional<News> news = newsRepository.findById(deleteActivityDTO.getId());
             if (news.isPresent()){
-                if (Objects.equals(news.get().getAuthor().getId(), user.getId())){
+                if (Objects.equals(news.get().getAuthor().getId(), user.getId()) || user.getRole() == Role.ADMIN){
                     newsRepository.delete(news.get());
                     return ResponseEntity.ok().build();
                 }
@@ -168,7 +169,7 @@ public class UserService {
             User user =  userRepository.findByUsernameOrEmail(email,email);
             Optional<News> news = newsRepository.findById(newsDTO.getId());
             if(news.isPresent()){
-                if (Objects.equals(user.getId(), news.get().getAuthor().getId())){
+                if (Objects.equals(user.getId(), news.get().getAuthor().getId()) || user.getRole() == Role.ADMIN){
                     if (news.get().getDescription() == null || !news.get().getDescription().equals(newsDTO.getDescription())){
                         news.get().setDescription(newsDTO.getDescription());
                     }

@@ -21,14 +21,16 @@ public class VoteController {
         this.rateService = rateService;
     }
 
-    @PostMapping("/vote_news")
-    public ResponseEntity<HttpStatus> voteNew(@RequestBody RateDTO rateDTO){
-        return rateService.execVoteNews(rateDTO);
+    @PostMapping("/make_vote")
+    public ResponseEntity<Integer> voteNew(@RequestBody RateDTO rateDTO){
+        if (rateDTO.getNews_id() != null){
+            return rateService.execVoteNews(rateDTO);
+        }
+        else if(rateDTO.getComment_id() != null){
+            return  rateService.execVoteComment(rateDTO);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-    @PostMapping("/vote_comment")
-    public ResponseEntity<HttpStatus> voteComment(@RequestBody RateDTO rateDTO){
-        return  rateService.execVoteComment(rateDTO);
-    }
 
 }
