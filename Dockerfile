@@ -5,7 +5,7 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # Copy the executable JAR file to the container
-COPY target/your-backend-app.jar /app/backend-app.jar
+COPY dstay-0.0.1-SNAPSHOT.jar /app/backend-app.jar
 
 # Make port 8080 available to the world outside this container
 EXPOSE 8080

@@ -84,15 +84,22 @@ public class CategoryAdministrationService {
     @PostConstruct
     public void createCategories(){
         List<String> categories = new LinkedList<>();
-        categories.add("Nature");
-        categories.add("Politics");
+        categories.add("Science");
+        categories.add("Politic");
         categories.add("Tech");
-        categories.add("Med");
+        categories.add("Discussions");
+        categories.add("Media");
+        categories.add("News");
+        categories.add("Economy");
+        categories.add("Misc");
         for (String cat : categories){
-            Category category = new Category();
-            category.setName(cat);
-            category.setNews_counter(0);
-            categoryRepository.save(category);
+            Optional<Category> fetched = categoryRepository.findByName(cat);
+            if (fetched.isEmpty()){
+                Category category = new Category();
+                category.setName(cat);
+                category.setNews_counter(0);
+                categoryRepository.save(category);
+            }
         }
     }
 }

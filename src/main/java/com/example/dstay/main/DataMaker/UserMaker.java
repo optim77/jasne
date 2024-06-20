@@ -23,32 +23,22 @@ public class UserMaker {
 
     @PostConstruct
     public void userCreator(){
-        User user = new User();
-        user.setUsername("Sew7n");
-        user.setEmail("plajerowy@gmail.com");
-        user.setPassword(passwordEncoder.encode("123123"));
-        user.setBio("lorem ipsum");
-        user.setLatitude(5.12);
-        user.setLongitude(9.15);
-        user.setCreatedAt(new Date());
-        user.setVerified(true);
-        user.setRole(Role.ADMIN);
-        userRepository.save(user);
-    }
-    @PostConstruct
-    public void userOtherCreator() {
-        IntStream.range(0, 10).forEach(i -> {
+        User fetched = userRepository.findByUsernameOrEmail("Sew7n", "plajerowy@gmail.com");
+        System.out.println("#########################");
+        System.out.println(fetched);
+        if (fetched.getId() == null){
             User user = new User();
-            user.setUsername("User" + i);
-            user.setEmail("user" + i + "@example.com");
+            user.setUsername("Sew7n");
+            user.setEmail("plajerowy@gmail.com");
             user.setPassword(passwordEncoder.encode("123123"));
-            user.setBio("Bio for user " + i);
-            user.setLatitude(5.12 + i);
-            user.setLongitude(9.15 + i);
+            user.setBio("lorem ipsum");
+            user.setLatitude(5.12);
+            user.setLongitude(9.15);
             user.setCreatedAt(new Date());
             user.setVerified(true);
-            user.setRole(i % 2 == 0 ? Role.ADMIN : Role.USER);
+            user.setRole(Role.ADMIN);
             userRepository.save(user);
-        });
+        }
+
     }
 }
