@@ -21,21 +21,29 @@ public class JwtUtils {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
+    }
+
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("role", userDetails.getAuthorities().iterator().next().getAuthority());
+        return generateToken(extraClaims, userDetails);
     }
-    public String generateToken(Map<String, Object> extraClaims,UserDetails userDetails){
+
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60  * 3600))
-                .signWith(getSingInKey(), SignatureAlgorithm.HS512)
+                .signWith(getSignInKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -53,11 +61,11 @@ public class JwtUtils {
     }
 
     private Claims extractAllClaims(String token){
-        return Jwts.parserBuilder().setSigningKey(getSingInKey()).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(getSignInKey()).build().parseClaimsJws(token).getBody();
     }
-    private Key getSingInKey(){
+
+    private Key getSignInKey(){
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
 }

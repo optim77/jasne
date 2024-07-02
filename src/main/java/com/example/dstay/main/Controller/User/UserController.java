@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(produces = "application/json")
-@CrossOrigin(origins = "*")
 public class UserController {
 
 
@@ -62,7 +61,6 @@ public class UserController {
     public ResponseEntity<HttpStatus> userNewsActivityUpdate(@RequestBody UpdateNewsDTO newsDTO){
         return userService.execUserNewsActivityUpdate(newsDTO);
     }
-
     @GetMapping("/profile/delete")
     public ResponseEntity<HttpStatus> deleteProfile(){
         JwtUtils jwtUtils = new JwtUtils();

@@ -8,6 +8,7 @@ import com.example.dstay.categories.Repository.CategoryRepository;
 import com.example.dstay.main.Repository.UserRepository;
 import com.example.dstay.news.Repository.NewsRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -71,7 +72,6 @@ public class CategoryAdministrationService {
         }
 
     }
-
     public ResponseEntity<HttpStatus> execDeleteCategory(CreateCategoryDTO createCategoryDTO){
         if(AdminUtils.adminRoleCheck(createCategoryDTO.getToken(), userRepository)){
             newsRepository.deleteAllByCategoryId(createCategoryDTO.getId());
@@ -81,7 +81,7 @@ public class CategoryAdministrationService {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    @PostConstruct
+    //@PostConstruct
     public void createCategories(){
         List<String> categories = new LinkedList<>();
         categories.add("Science");

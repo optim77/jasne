@@ -11,7 +11,6 @@ import java.util.Date;
 @Entity
 @Data
 @Table(name = "news")
-@RestResource(rel = "element", path = "element")
 public class News {
     @Id
     @GeneratedValue

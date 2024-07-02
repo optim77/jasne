@@ -7,7 +7,6 @@ import java.nio.file.AccessDeniedException;
 
 @RestController
 @RequestMapping(produces = "application/json")
-@CrossOrigin(origins = "*")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;

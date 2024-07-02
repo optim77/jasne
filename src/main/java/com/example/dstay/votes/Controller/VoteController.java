@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(produces = "application/json")
-@CrossOrigin(origins = "*")
 @RestResource
 public class VoteController {
 

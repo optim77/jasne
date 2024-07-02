@@ -7,7 +7,6 @@ import org.springframework.data.rest.core.annotation.RestResource;
 @Entity
 @Table(name = "record")
 @Data
-@RestResource(rel = "element", path = "element")
 public class Element extends BaseEntity{
 
     @Column(name = "name", nullable = false, unique = false, length = 255)

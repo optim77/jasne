@@ -23,7 +23,7 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     Page<News> findByCategory_Name(String category, Pageable pageable);
 
     @Query("SELECT n FROM News n WHERE n.created_at >= :startDate AND n.created_at < :endDate ORDER BY n.votes DESC")
-    Page<News> findTop10NewsByVotesInCurrentWeek(@Param("startDate") Date startDate, @Param("endDate") Date endDate, Pageable pageable);
+    Page<News> findTop100NewsByVotesInCurrentWeek(@Param("startDate") Date startDate, @Param("endDate") Date endDate, Pageable pageable);
 
     Page<News> findAll(Pageable pageable);
 

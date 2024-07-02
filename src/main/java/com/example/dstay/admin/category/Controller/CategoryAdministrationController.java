@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(produces = "application/json")
-@CrossOrigin(origins = "*")
-@RestResource
 public class CategoryAdministrationController {
     private final CategoryAdministrationService categoryAdministrationService;
 
@@ -35,7 +33,7 @@ public class CategoryAdministrationController {
         return categoryAdministrationService.execUpdateCategory(createCategoryDTO);
     }
 
-    @PostMapping("/admin/category/delete")
+    @DeleteMapping("/admin/category/delete")
     ResponseEntity<HttpStatus> deleteCategory(@RequestBody CreateCategoryDTO createCategoryDTO){
         return  categoryAdministrationService.execDeleteCategory(createCategoryDTO);
     }

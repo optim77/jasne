@@ -22,8 +22,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping(produces = "application/json")
-@CrossOrigin(origins = "*")
-@RestResource
 public class NewsControllers {
 
     private final NewsRepository newsRepository;

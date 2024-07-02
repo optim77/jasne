@@ -11,7 +11,6 @@ import java.util.Set;
 @Entity
 @Data
 @Table(name = "category")
-@RestResource(rel = "category", path = "category")
 public class Category {
 
     @Id

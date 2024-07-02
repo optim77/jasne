@@ -24,7 +24,6 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequestMapping(produces = "application/json")
-@CrossOrigin(origins = "*")
 public class CommentsController {
 
     private final CommentRepository commentRepository;

@@ -47,7 +47,6 @@ public class DstaySecurityConfiguration {
                 .logout(logout -> logout
                         .logoutUrl("/api/v1/auth/logout"));
 
-        http.cors().disable();
         http.headers().frameOptions().disable();
         http.exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler());
         return http.build();

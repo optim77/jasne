@@ -21,7 +21,6 @@ import java.util.Optional;
 @Slf4j
 @RequestMapping(produces = "application/json")
 @EnableConfigurationProperties(GlobalProps.class)
-@CrossOrigin(origins = "*")
 public class ElementController {
 
     private final GlobalProps globalProps;

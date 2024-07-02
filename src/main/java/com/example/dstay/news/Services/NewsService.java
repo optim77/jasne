@@ -171,7 +171,7 @@ public class NewsService {
             calendar.add(Calendar.WEEK_OF_YEAR, 1);
             Date endDate = calendar.getTime();
             PageRequest pageRequest = PageRequest.of(0, 10);
-            Page<News> news = newsRepository.findTop10NewsByVotesInCurrentWeek(startDate, endDate, pageRequest);
+            Page<News> news = newsRepository.findTop100NewsByVotesInCurrentWeek(startDate, endDate, pageRequest);
             return new PageImpl<>(news.stream()
                     .map(n -> {
                         CategoryNewsDTO categoryNewsDTO = new CategoryNewsDTO();

@@ -11,7 +11,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping(produces = "application/json")
-@CrossOrigin(origins = "*")
 public class CategoryController {
 
     private final CategoryRepository categoryRepository;

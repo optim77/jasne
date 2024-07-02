@@ -23,13 +23,11 @@ public class UserMaker {
 
     @PostConstruct
     public void userCreator(){
-        User fetched = userRepository.findByUsernameOrEmail("Sew7n", "plajerowy@gmail.com");
-        System.out.println("#########################");
-        System.out.println(fetched);
-        if (fetched.getId() == null){
+        User fetched = userRepository.findByUsernameOrEmail("Sew7n", "admin@jasne.com");
+        if (fetched == null){
             User user = new User();
             user.setUsername("Sew7n");
-            user.setEmail("plajerowy@gmail.com");
+            user.setEmail("admin@jasne.com");
             user.setPassword(passwordEncoder.encode("123123"));
             user.setBio("lorem ipsum");
             user.setLatitude(5.12);
