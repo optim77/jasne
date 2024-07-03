@@ -104,4 +104,5 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     private Set<News> news;
+
 }

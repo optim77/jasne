@@ -66,10 +66,13 @@ public class NewsService {
 
             if (token != null){
                 String username = jwtUtils.extractUsername(token);
-                Long userId = userRepository.findByUsernameOrEmail(username, username).getId();
-                if (voteRepository.findByUsersIdAndNewsId(userId, newsId).isPresent()){
-                    newsWithAuthorDetails.setVoted(true);
+                if(!Objects.equals(Role.ADMIN.toString(), jwtUtils.extractRole(token))){
+                    Long userId = userRepository.findByUsernameOrEmail(username, username).getId();
+                    if (voteRepository.findByUsersIdAndNewsId(userId, newsId).isPresent()){
+                        newsWithAuthorDetails.setVoted(true);
+                    }
                 }
+
             }
 
             return newsWithAuthorDetails;

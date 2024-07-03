@@ -12,6 +12,7 @@ import com.example.dstay.main.Security.JwtUtils;
 import com.example.dstay.news.Entity.News;
 import com.example.dstay.news.Repository.NewsActivityRepository;
 import com.example.dstay.news.Repository.NewsRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -128,22 +129,23 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
+    @Transactional
     public ResponseEntity<HttpStatus> execUserNewsActivityDelete(DeleteActivityDTO deleteActivityDTO){
-        try {
+//        try {
             String email = jwtUtils.extractUsername(deleteActivityDTO.getToken());
             User user =  userRepository.findByUsernameOrEmail(email,email);
             Optional<News> news = newsRepository.findById(deleteActivityDTO.getId());
             if (news.isPresent()){
                 if (Objects.equals(news.get().getAuthor().getId(), user.getId()) || user.getRole() == Role.ADMIN){
+                    commentRepository.deleteByNewsId(news.get().getId());
                     newsRepository.delete(news.get());
                     return ResponseEntity.ok().build();
                 }
             }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+//        }catch (Exception e){
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
     }
 
     public ResponseEntity<HttpStatus> execUserCommentsActivityDelete(DeleteActivityDTO deleteActivityDTO){
