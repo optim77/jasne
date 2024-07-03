@@ -40,10 +40,9 @@ function Edit() {
                             setContent(content);
                             try {
                                 setUrls(content.newsUrl.split(';'));
-                                setIsLoaded(true);
                             } catch (e) {
                             }
-
+                            setIsLoaded(true);
                         } catch (e) {
                             navigate("/");
                         }
@@ -75,6 +74,7 @@ function Edit() {
         }
     }
     const handleCategoryChange = (e) => {
+        console.log(e.target.value)
         setSelectedCategory(e.target.value);
     };
 
@@ -83,6 +83,7 @@ function Edit() {
         if(!selectedCategory){
             setSelectedCategory(content.categories);
         }
+        console.log(selectedCategory)
         try {
             let res = await fetch(`${process.env.REACT_APP_API_ADDRESS}/profile/news/update`, {
                 method: "PUT",
@@ -92,11 +93,11 @@ function Edit() {
                 },
                 body: JSON.stringify({
                     id: content.newsId,
-                    author: cookieGetter(),
+                    author: localStorage.getItem('jasne_adm'),
                     url: updateUrls ? updateUrls : content.newsUrl,
                     description: updateDescription ? updateDescription : content.newsDescription,
                     title: updateTitle ? updateTitle : content.newsTitle,
-                    categories: selectedCategory ? selectedCategory : content.categories_id
+                    categories: selectedCategory ? parseInt(selectedCategory) : parseInt(content.categories_id)
                 })
             })
             if(res.ok){
