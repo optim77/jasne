@@ -28,7 +28,7 @@ function View() {
     useEffect(() => {
         getNews();
         setIsLoadedNews(true);
-        fetchComments(id, 0);
+        fetchComments(id, 0, true); // Fetch comments and reset the state
         setIsLoadedComment(true);
     }, [id]);
 
@@ -62,7 +62,7 @@ function View() {
         }
     };
 
-    const fetchComments = async (id, page) => {
+    const fetchComments = async (id, page, reset = false) => {
         try {
             let res = await fetch(`${process.env.REACT_APP_API_ADDRESS}/news_comments/` + id + '?page=' + page, {
                 method: "POST",
@@ -76,7 +76,11 @@ function View() {
             });
             if (res.ok) {
                 res.json().then(data => {
-                    setComments(prevComments => [...prevComments, ...data.content]);
+                    if (reset) {
+                        setComments(data.content);
+                    } else {
+                        setComments(prevComments => [...prevComments, ...data.content]);
+                    }
                     setTotalPages(data.totalPages);
                     setIsLoadedComment(true);
                 });
