@@ -5,7 +5,7 @@ FROM openjdk:18-jdk-slim
 WORKDIR /app
 
 # Copy the executable JAR file to the container
-COPY ./backend/dstay-0.0.6-SNAPSHOT.jar /app/backend-app.jar
+COPY ./backend/dstay-0.0.7-SNAPSHOT.jar /app/backend-app.jar
 
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
